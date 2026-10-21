@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-inter: 'Inter', sans-serif;
+    --font-jetbrains-mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    background-color: #0D0E11;
+    color: #F3F4F6;
+    font-family: var(--font-inter);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Monospace tabular numbers */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0D0E11;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #232730;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #343844;
+}
+
+/* Glow and subtle border utilities */
+.border-subtle {
+  border: 1px solid #232730;
+}
+
+.border-subtle-hover:hover {
+  border-color: #2E3440;
+}
+
+.card-elevated {
+  background: #14161B;
+  border: 1px solid #232730;
+  border-radius: 6px;
+}

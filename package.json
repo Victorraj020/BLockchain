@@ -1,0 +1,15 @@
+{
+  "name": "dead-man-switch-project",
+  "version": "1.0.0",
+  "description": "Dead-Man Switch — Blockchain-Based Digital Contingency Vault",
+  "private": true,
+  "scripts": {
+    "chain": "npm --prefix contracts run node",
+    "compile": "npm --prefix contracts run compile",
+    "test:contracts": "npm --prefix contracts run test",
+    "deploy:local": "npm --prefix contracts run deploy:local",
+    "deploy:sepolia": "npm --prefix contracts run deploy:sepolia",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build:frontend": "npm --prefix frontend run build"
+  }
+}
