@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useWeb3 } from "@/context/Web3Context";
 import { useAuth } from "@/context/AuthContext";
-import MetaMaskFox from "./MetaMaskFox";
+import AegisEmblem from "./AegisEmblem";
 import {
   ChevronDown,
   Clock,
@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { shortenAddress } from "@/lib/constants";
 
-export default function MetaMaskHeroShowcase() {
+export default function AegisHeroShowcase() {
   const {
     account,
     isConnected,
@@ -34,7 +34,7 @@ export default function MetaMaskHeroShowcase() {
     claimFaucet,
     txPending,
   } = useWeb3();
-  const { user, openAuthModal } = useAuth();
+  const { user } = useAuth();
 
   // Interactive 3D Card tilt state
   const [tilt, setTilt] = useState({ rx: 6, ry: -10 });
@@ -43,7 +43,6 @@ export default function MetaMaskHeroShowcase() {
   >(null);
   const [copied, setCopied] = useState(false);
   const [swapAmount, setSwapAmount] = useState("100");
-  const [swapTarget, setSwapTarget] = useState("mUSD");
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -55,7 +54,7 @@ export default function MetaMaskHeroShowcase() {
   };
 
   const handleMouseLeave = () => {
-    setTilt({ rx: 6, ry: -10 }); // Return to default stylish angle
+    setTilt({ rx: 6, ry: -10 });
   };
 
   const copyAddress = () => {
@@ -68,28 +67,28 @@ export default function MetaMaskHeroShowcase() {
 
   return (
     <div className="relative w-full overflow-hidden rounded-3xl bg-gradient-to-br from-[#0B0C10] via-[#101217] to-[#151722] border border-[#232732] p-6 md:p-12 mb-8 shadow-2xl">
-      {/* Background MetaMask-style dramatic gradient splash */}
-      <div className="absolute top-0 right-0 w-[550px] h-[550px] bg-gradient-to-bl from-[#7B3FE4]/30 via-[#FF5C00]/20 to-transparent blur-3xl pointer-events-none rounded-full" />
+      {/* Background dramatic gradient splash */}
+      <div className="absolute top-0 right-0 w-[550px] h-[550px] bg-gradient-to-bl from-[#7B3FE4]/30 via-[#10B981]/20 to-transparent blur-3xl pointer-events-none rounded-full" />
       <div className="absolute -bottom-20 -left-20 w-[400px] h-[400px] bg-[#6366F1]/15 blur-3xl pointer-events-none rounded-full" />
 
-      {/* Grid Layout: Left Hero Pitch, Right Animated MetaMask Card */}
+      {/* Grid Layout: Left Hero Pitch, Right Animated Mobile Card */}
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        {/* Left Column: Bold MetaMask Marketing Copy */}
+        {/* Left Column: Bold Marketing Copy */}
         <div className="lg:col-span-7 flex flex-col justify-center text-left">
           {/* Top Brand Tag */}
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1A1D27] border border-[#2F3446] w-fit mb-5 shadow-sm">
-            <MetaMaskFox size={24} />
+            <AegisEmblem size={24} />
             <span className="text-xs font-semibold tracking-wide text-white">
-              MetaMask Powered Vault Protocol
+              Aegis Contingency Vault Protocol
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-ping" />
           </div>
 
-          {/* Main Huge Headline */}
+          {/* Main Headline */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.08] mb-4">
             Trade anything.
             <br />
-            <span className="bg-gradient-to-r from-white via-[#F3F4F6] to-[#E2761B] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-white via-[#F3F4F6] to-[#CABEFF] bg-clip-text text-transparent">
               Earn more.
             </span>
           </h1>
@@ -103,27 +102,17 @@ export default function MetaMaskHeroShowcase() {
 
           {/* Call to Actions */}
           <div className="flex flex-wrap items-center gap-3">
-            {!user ? (
-              <button
-                onClick={openAuthModal}
-                className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#E2761B] via-[#F6851B] to-[#FF7020] hover:from-[#CD6116] hover:to-[#E56515] text-white text-sm font-semibold shadow-[0_8px_25px_rgba(246,133,27,0.4)] transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2 cursor-pointer"
-              >
-                <MetaMaskFox size={20} />
-                <span>Get started</span>
-              </button>
-            ) : (
-              <div className="px-4 py-2.5 rounded-xl bg-[#1C1F27] border border-emerald-500/40 text-emerald-400 text-xs font-mono flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                <span>Authenticated: {user.email || user.displayName || "Active"}</span>
-              </div>
-            )}
+            <div className="px-4 py-2.5 rounded-xl bg-[#1C1F27] border border-emerald-500/40 text-emerald-400 text-xs font-mono flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span>Session: {user?.email || user?.displayName || "Authenticated"}</span>
+            </div>
 
             {!isConnected ? (
               <button
                 onClick={connectWallet}
                 className="px-5 py-3 rounded-xl bg-[#181B24] hover:bg-[#202533] border border-[#2D3346] hover:border-gray-500 text-white text-sm font-medium transition-all flex items-center gap-2 cursor-pointer"
               >
-                <span>Connect Wallet</span>
+                <span>Connect Web3 Wallet</span>
               </button>
             ) : (
               <button
@@ -154,7 +143,7 @@ export default function MetaMaskHeroShowcase() {
           </div>
         </div>
 
-        {/* Right Column: Exact 3D Animated MetaMask Mobile Wallet Card */}
+        {/* Right Column: Exact 3D Animated Mobile Wallet Card */}
         <div
           className="lg:col-span-5 flex justify-center perspective-[1200px]"
           onMouseMove={handleMouseMove}
@@ -173,15 +162,13 @@ export default function MetaMaskHeroShowcase() {
               <div className="w-8 h-1 rounded-full bg-[#2B2E3C]" />
             </div>
 
-            {/* Top Navigation Row in Mockup */}
+            {/* Top Navigation Row */}
             <div className="flex items-center justify-between mb-6">
-              {/* Account Dropdown Pill */}
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1A1C23] border border-[#2B2E3C] hover:border-gray-500 cursor-pointer transition-colors">
                 <span className="text-xs font-semibold text-white">Main</span>
                 <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
               </div>
 
-              {/* Action Icons Right */}
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setActiveActionModal("send")}
@@ -197,13 +184,9 @@ export default function MetaMaskHeroShowcase() {
                 >
                   <Search className="w-3.5 h-3.5" />
                 </button>
-                <button
-                  onClick={openAuthModal}
-                  className="p-2 rounded-full bg-[#1A1C23] border border-[#2B2E3C] text-gray-300 hover:text-white transition-colors"
-                  title="Menu"
-                >
+                <div className="p-2 rounded-full bg-[#1A1C23] border border-[#2B2E3C] text-gray-300">
                   <Menu className="w-3.5 h-3.5" />
-                </button>
+                </div>
               </div>
             </div>
 
@@ -224,8 +207,8 @@ export default function MetaMaskHeroShowcase() {
                 onClick={() => setActiveActionModal("buy")}
                 className="flex flex-col items-center gap-1.5 group cursor-pointer"
               >
-                <div className="w-12 h-12 rounded-2xl bg-[#1A1C23] group-hover:bg-[#252834] border border-[#2B2E3C] group-hover:border-[#F6851B] flex items-center justify-center text-white transition-all transform group-hover:scale-105 shadow-md">
-                  <DollarSign className="w-5 h-5 text-[#F6851B]" />
+                <div className="w-12 h-12 rounded-2xl bg-[#1A1C23] group-hover:bg-[#252834] border border-[#2B2E3C] group-hover:border-[#7C66DC] flex items-center justify-center text-white transition-all transform group-hover:scale-105 shadow-md">
+                  <DollarSign className="w-5 h-5 text-amber-400" />
                 </div>
                 <span className="text-[11px] font-medium text-gray-300 group-hover:text-white">
                   Buy
@@ -296,19 +279,19 @@ export default function MetaMaskHeroShowcase() {
               </button>
             </div>
 
-            {/* Bottom active notification badge in screenshot */}
+            {/* Bottom active notification badge */}
             <div className="mt-3 flex items-center justify-between px-3 py-1.5 rounded-xl bg-[#0D0E12] border border-[#222530] text-[10px] text-gray-400">
-              <span className="flex items-center gap-1 text-[#F6851B]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#F6851B]" />
-                MetaMask Synced
+              <span className="flex items-center gap-1 text-purple-400">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+                Aegis Synced
               </span>
-              <span className="font-mono text-gray-500">v12.4.0</span>
+              <span className="font-mono text-gray-500">v2.1.0</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Interactive Action Modals for Buy, Swap, Send, Receive */}
+      {/* Action Modals */}
       {activeActionModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in">
           <div className="relative w-full max-w-sm rounded-2xl bg-[#14161B] border border-[#2E3344] p-6 shadow-2xl text-left">
@@ -323,7 +306,7 @@ export default function MetaMaskHeroShowcase() {
             {activeActionModal === "buy" && (
               <div>
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="w-8 h-8 rounded-full bg-[#F6851B]/20 text-[#F6851B] flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center">
                     <DollarSign className="w-4 h-4" />
                   </div>
                   <div>
@@ -347,7 +330,7 @@ export default function MetaMaskHeroShowcase() {
                       setActiveActionModal(null);
                     }}
                     disabled={txPending}
-                    className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#E2761B] to-[#F6851B] hover:from-[#CD6116] hover:to-[#E57815] text-white text-xs font-semibold shadow-md transition-all cursor-pointer"
+                    className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#7C66DC] to-[#6C55CF] hover:from-[#6C55CF] hover:to-[#5B44BE] text-white text-xs font-semibold shadow-md transition-all cursor-pointer"
                   >
                     {txPending ? "Minting tokens..." : "Claim 1,000 TEST Now"}
                   </button>
@@ -363,7 +346,7 @@ export default function MetaMaskHeroShowcase() {
                     <ArrowDownUp className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="text-base font-bold text-white">MetaMask Swap</h3>
+                    <h3 className="text-base font-bold text-white">Instant Swap</h3>
                     <p className="text-xs text-gray-400">Best price execution across DEXs</p>
                   </div>
                 </div>
@@ -469,12 +452,11 @@ export default function MetaMaskHeroShowcase() {
                   </div>
                   <div>
                     <h3 className="text-base font-bold text-white">Receive Assets</h3>
-                    <p className="text-xs text-gray-400">Share your public address or QR code</p>
+                    <p className="text-xs text-gray-400">Share your public address</p>
                   </div>
                 </div>
 
                 <div className="p-4 rounded-xl bg-[#0D0E11] border border-[#232730] text-center my-4">
-                  {/* Stylized QR placeholder */}
                   <div className="w-32 h-32 mx-auto bg-white p-2 rounded-lg flex items-center justify-center mb-3">
                     <div className="w-full h-full border-4 border-black border-dashed flex items-center justify-center text-black font-mono text-[9px] font-bold text-center">
                       QR: {shortenAddress(account || "0x0000000000000000000000000000000000000000", 4)}

@@ -2,19 +2,18 @@
 
 import React, { useState, useEffect } from "react";
 
-interface MetaMaskFoxProps {
+interface AegisEmblemProps {
   className?: string;
   size?: number;
 }
 
-export default function MetaMaskFox({ className = "", size = 80 }: MetaMaskFoxProps) {
+export default function AegisEmblem({ className = "", size = 80 }: AegisEmblemProps) {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      // Calculate normalized offset from center of screen (-1 to 1)
-      const x = (e.clientX / window.innerWidth - 0.5) * 12;
-      const y = (e.clientY / window.innerHeight - 0.5) * 12;
+      const x = (e.clientX / window.innerWidth - 0.5) * 14;
+      const y = (e.clientY / window.innerHeight - 0.5) * 14;
       setMousePos({ x, y });
     };
 
@@ -31,128 +30,128 @@ export default function MetaMaskFox({ className = "", size = 80 }: MetaMaskFoxPr
         transform: `perspective(500px) rotateY(${mousePos.x}deg) rotateX(${-mousePos.y}deg)`,
       }}
     >
-      {/* SVG geometric MetaMask-style fox head with layered polygon shading */}
+      {/* 3D Geometric Aegis Guardian Emblem */}
       <svg
         viewBox="0 0 318.6 318.6"
         width={size}
         height={size}
-        className="drop-shadow-[0_8px_20px_rgba(246,133,27,0.35)]"
+        className="drop-shadow-[0_8px_25px_rgba(124,102,220,0.45)]"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        {/* Outer Left Ear */}
+        {/* Outer Left Crest */}
         <polygon
           points="70.3,55.9 127.5,108.2 111.7,40.1"
-          fill="#E2761B"
-          stroke="#E2761B"
+          fill="#7C66DC"
+          stroke="#7C66DC"
           strokeWidth="2"
         />
-        {/* Outer Right Ear */}
+        {/* Outer Right Crest */}
         <polygon
           points="248.3,55.9 206.9,40.1 191.1,108.2"
-          fill="#E2761B"
-          stroke="#E2761B"
+          fill="#6C55CF"
+          stroke="#6C55CF"
           strokeWidth="2"
         />
 
-        {/* Ear Insides */}
-        <polygon points="70.3,55.9 111.7,40.1 89.2,26.4" fill="#D7C1B3" />
-        <polygon points="248.3,55.9 229.4,26.4 206.9,40.1" fill="#D7C1B3" />
+        {/* Crest Insides */}
+        <polygon points="70.3,55.9 111.7,40.1 89.2,26.4" fill="#CABEFF" />
+        <polygon points="248.3,55.9 229.4,26.4 206.9,40.1" fill="#CABEFF" />
 
-        {/* Forehead Center Polygons */}
+        {/* Center Forehead Crystal */}
         <polygon
           points="159.3,71.2 111.7,40.1 127.5,108.2 159.3,135.5"
-          fill="#E4761B"
+          fill="#5B44BE"
         />
         <polygon
           points="159.3,71.2 159.3,135.5 191.1,108.2 206.9,40.1"
-          fill="#CD6116"
+          fill="#4A34AC"
         />
 
         {/* Forehead Bridge */}
-        <polygon points="159.3,71.2 206.9,40.1 159.3,25.2" fill="#E4761B" />
-        <polygon points="159.3,71.2 159.3,25.2 111.7,40.1" fill="#CD6116" />
+        <polygon points="159.3,71.2 206.9,40.1 159.3,25.2" fill="#7C66DC" />
+        <polygon points="159.3,71.2 159.3,25.2 111.7,40.1" fill="#6C55CF" />
 
-        {/* Cheek Left */}
+        {/* Cheek Plate Left */}
         <polygon
           points="58.9,139.8 127.5,108.2 70.3,55.9"
-          fill="#E4761B"
+          fill="#6C55CF"
         />
         <polygon
           points="58.9,139.8 96.5,185.3 127.5,108.2"
-          fill="#D7C1B3"
+          fill="#CABEFF"
         />
 
-        {/* Cheek Right */}
+        {/* Cheek Plate Right */}
         <polygon
           points="259.7,139.8 248.3,55.9 191.1,108.2"
-          fill="#CD6116"
+          fill="#5B44BE"
         />
         <polygon
           points="259.7,139.8 191.1,108.2 222.1,185.3"
-          fill="#D7C1B3"
+          fill="#CABEFF"
         />
 
-        {/* Eyes Backing & Cheeks */}
+        {/* Eye Visors */}
         <polygon
           points="127.5,108.2 96.5,185.3 159.3,135.5"
-          fill="#F6851B"
+          fill="#8B77E6"
         />
         <polygon
           points="191.1,108.2 159.3,135.5 222.1,185.3"
-          fill="#E2761B"
+          fill="#7C66DC"
         />
 
-        {/* Snout Upper */}
+        {/* Lower Core Shield */}
         <polygon
           points="159.3,135.5 96.5,185.3 133.7,218.4 159.3,178.6"
-          fill="#F6851B"
+          fill="#6C55CF"
         />
         <polygon
           points="159.3,135.5 159.3,178.6 184.9,218.4 222.1,185.3"
-          fill="#E2761B"
+          fill="#5B44BE"
         />
 
-        {/* Nose Lower & Mouth */}
+        {/* Chin Apex */}
         <polygon
           points="159.3,212.1 133.7,218.4 148.6,242.2 159.3,239.5"
-          fill="#C0AD9E"
+          fill="#CABEFF"
         />
         <polygon
           points="159.3,212.1 159.3,239.5 170,242.2 184.9,218.4"
-          fill="#161616"
+          fill="#1C1F28"
         />
 
-        {/* True Nose Black Tip */}
+        {/* Center Keystone */}
         <polygon
           points="159.3,178.6 148.6,204.3 159.3,212.1 170,204.3"
-          fill="#233447"
+          fill="#10B981"
         />
 
-        {/* Left Eye */}
+        {/* Left Sensor Eye */}
         <polygon
           points="106.8,154.2 96.5,185.3 125.1,170.8"
-          fill="#24292E"
+          fill="#0D0E12"
         />
-        {/* Right Eye */}
+        {/* Right Sensor Eye */}
         <polygon
           points="211.8,154.2 193.5,170.8 222.1,185.3"
-          fill="#24292E"
+          fill="#0D0E12"
         />
 
-        {/* Eye pupils / highlights with subtle shift based on mouse */}
+        {/* Glowing Dynamic Pupil Beacons */}
         <circle
           cx={112 + mousePos.x * 0.3}
           cy={165 + mousePos.y * 0.3}
-          r="3"
-          fill="#00FFFF"
+          r="3.5"
+          fill="#10B981"
           className="animate-pulse"
         />
         <circle
           cx={206 + mousePos.x * 0.3}
           cy={165 + mousePos.y * 0.3}
-          r="3"
-          fill="#00FFFF"
+          r="3.5"
+          fill="#10B981"
           className="animate-pulse"
         />
       </svg>

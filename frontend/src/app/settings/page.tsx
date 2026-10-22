@@ -242,7 +242,7 @@ export default function SettingsPage() {
           </h2>
         </div>
         <p className="text-xs text-outline mt-2 mb-4">
-          Import these well-known local test private keys into MetaMask to easily test the owner, beneficiary, and trigger roles:
+          Import these well-known local test private keys into your Web3 wallet to easily test the owner, beneficiary, and trigger roles:
         </p>
 
         <div className="space-y-3 text-xs font-mono">

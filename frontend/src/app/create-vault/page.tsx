@@ -266,7 +266,7 @@ export default function CreateVaultPage() {
               <p className="text-xs text-danger font-mono">{errors.tokenAmount}</p>
             )}
             <p className="text-[11px] text-outline">
-              Requires explicit ERC-20 token approval in MetaMask before vault creation.
+              Requires explicit ERC-20 token approval in your Web3 wallet before vault creation.
             </p>
           </div>
         )}
@@ -348,7 +348,7 @@ export default function CreateVaultPage() {
 
             <div className="p-3 rounded bg-surface-container border border-outline-variant/30 text-xs text-outline mb-4">
               <p>
-                Clicking confirm will request your signature in MetaMask to create the vault
+                Clicking confirm will request your signature in your Web3 wallet to create the vault
                 {actionType === 0 ? " and deposit the configured test tokens." : "."}
               </p>
             </div>

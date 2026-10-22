@@ -206,7 +206,7 @@ export function Web3Provider({ children }: { children: React.ReactNode }) {
   // Connect Wallet
   const connectWallet = async () => {
     if (typeof window === "undefined" || !window.ethereum) {
-      setTxError("MetaMask not found. Please install MetaMask to interact with this dApp.");
+      setTxError("Web3 wallet not detected. Please install a Web3 wallet extension to interact with this dApp.");
       return;
     }
     try {
@@ -561,7 +561,7 @@ export function Web3Provider({ children }: { children: React.ReactNode }) {
       // Check allowance
       const allowance = await testToken.allowance(account, CONTRACT_ADDRESSES.deadManSwitch);
       if (allowance < parsedAmount) {
-        setTxSuccessMessage("Step 1/2: Approving TEST token transfer in MetaMask...");
+        setTxSuccessMessage("Step 1/2: Approving TEST token transfer in your wallet...");
         const approveTx = await testToken.approve(CONTRACT_ADDRESSES.deadManSwitch, parsedAmount);
         await approveTx.wait();
       }
@@ -623,7 +623,7 @@ export function Web3Provider({ children }: { children: React.ReactNode }) {
 
       // 1. If Token Transfer action, check and approve allowance
       if (params.actionType === 0 && parsedTokenAmount > BigInt(0)) {
-        setTxSuccessMessage("Step 1/3: Approving TEST token spending in MetaMask...");
+        setTxSuccessMessage("Step 1/3: Approving TEST token spending in your wallet...");
         const allowance = await testToken.allowance(account, CONTRACT_ADDRESSES.deadManSwitch);
         if (allowance < parsedTokenAmount) {
           const approveTx = await testToken.approve(
