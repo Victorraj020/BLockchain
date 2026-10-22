@@ -2,6 +2,8 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useWeb3 } from "@/context/Web3Context";
+import { useAuth } from "@/context/AuthContext";
+import MetaMaskFox from "@/components/common/MetaMaskFox";
 import { shortenAddress, LOCAL_CHAIN_ID, SEPOLIA_CHAIN_ID } from "@/lib/constants";
 import {
   Wallet,
@@ -12,6 +14,7 @@ import {
   ExternalLink,
   Sparkles,
   Layers,
+  User,
 } from "lucide-react";
 
 export default function Header() {
@@ -31,14 +34,20 @@ export default function Header() {
     txPending,
   } = useWeb3();
 
+  const { user, openAuthModal, logOut } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const userDropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown on click outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setDropdownOpen(false);
+      }
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target as Node)) {
+        setUserDropdownOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -205,6 +214,70 @@ export default function Header() {
           >
             <Wallet className="w-3.5 h-3.5" />
             <span>{isConnecting ? "Connecting..." : "Connect Wallet"}</span>
+          </button>
+        )}
+
+        {/* Firebase MetaMask Auth Profile Button */}
+        {user ? (
+          <div className="relative" ref={userDropdownRef}>
+            <button
+              onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#1C1F28] border border-[#2F3446] hover:border-[#F6851B] transition-colors text-xs"
+              title="MetaMask Account Profile"
+            >
+              <MetaMaskFox size={18} />
+              <span className="text-[11px] font-mono text-gray-200 hidden sm:inline max-w-[100px] truncate">
+                {user.displayName || user.email?.split("@")[0] || "User"}
+              </span>
+              <ChevronDown className="w-3 h-3 text-gray-400" />
+            </button>
+
+            {userDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-64 rounded-xl bg-[#14161B] border border-[#2B2E3C] shadow-2xl p-3 z-50 animate-in fade-in zoom-in-95 duration-100 text-left">
+                <div className="flex items-center gap-2.5 pb-2.5 border-b border-[#232730]">
+                  <MetaMaskFox size={28} />
+                  <div className="overflow-hidden">
+                    <p className="text-xs font-bold text-white truncate">
+                      {user.displayName || "MetaMask User"}
+                    </p>
+                    <p className="text-[11px] font-mono text-gray-400 truncate">
+                      {user.email}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="py-2 text-[11px] text-gray-400 space-y-1">
+                  <div className="flex justify-between">
+                    <span>Auth Provider:</span>
+                    <span className="text-white font-mono">Firebase</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Status:</span>
+                    <span className="text-emerald-400 font-mono">Active</span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    logOut();
+                    setUserDropdownOpen(false);
+                  }}
+                  className="w-full mt-1 flex items-center justify-center gap-2 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-medium transition-colors"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Lock / Sign Out</span>
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <button
+            onClick={openAuthModal}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#E2761B] to-[#F6851B] hover:from-[#D16B16] hover:to-[#E57815] text-white text-xs font-semibold shadow-sm transition-all cursor-pointer"
+            title="Sign in or create account with MetaMask Auth"
+          >
+            <MetaMaskFox size={18} />
+            <span className="hidden sm:inline">MetaMask</span> Login
           </button>
         )}
       </div>

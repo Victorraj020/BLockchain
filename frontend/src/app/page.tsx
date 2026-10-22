@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useWeb3 } from "@/context/Web3Context";
 import CountdownTimer from "@/components/dashboard/CountdownTimer";
+import MetaMaskHeroShowcase from "@/components/common/MetaMaskHeroShowcase";
 import {
   shortenAddress,
   formatInterval,
@@ -74,6 +75,9 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col gap-6 animate-in fade-in duration-200">
+      {/* MetaMask Hero Showcase with 3D interactive wallet animation */}
+      <MetaMaskHeroShowcase />
+
       {/* Top Header & Greeting Area */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>

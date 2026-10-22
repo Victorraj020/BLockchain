@@ -10,6 +10,9 @@
     "deploy:local": "npm --prefix contracts run deploy:local",
     "deploy:sepolia": "npm --prefix contracts run deploy:sepolia",
     "dev:frontend": "npm --prefix frontend run dev",
-    "build:frontend": "npm --prefix frontend run build"
+    "build:frontend": "npm --prefix frontend run build",
+    "build": "npm --prefix frontend run build",
+    "start": "npm --prefix frontend run start",
+    "dev": "npm --prefix frontend run dev"
   }
 }
