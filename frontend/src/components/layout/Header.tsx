@@ -22,6 +22,7 @@ export default function Header() {
     tokenBalance,
     isConnecting,
     isConnected,
+    isCorrectNetwork,
     connectWallet,
     disconnectWallet,
     switchNetwork,
@@ -70,6 +71,17 @@ export default function Header() {
           <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse" />
           <span className="font-mono text-[11px] text-secondary">Contract Synced</span>
         </div>
+
+        {/* Wrong Network Warning Pill */}
+        {isConnected && !isCorrectNetwork && (
+          <button
+            onClick={() => switchNetwork(LOCAL_CHAIN_ID)}
+            className="flex items-center gap-1.5 px-3 py-1 rounded bg-danger/20 border border-danger/60 text-danger hover:bg-danger/30 text-xs font-mono transition-colors animate-pulse"
+            title="You are not connected to Hardhat Localhost. Click to switch automatically."
+          >
+            <span>⚠️ Switch to Hardhat Localhost</span>
+          </button>
+        )}
 
         {isConnected ? (
           <>

@@ -244,27 +244,41 @@ export function Web3Provider({ children }: { children: React.ReactNode }) {
         method: "wallet_switchEthereumChain",
         params: [{ chainId: hexChainId }],
       });
+      setChainId(targetChainId);
     } catch (switchError: any) {
       // 4902 means the chain has not been added to MetaMask
-      if (switchError.code === 4902) {
+      if (switchError.code === 4902 || switchError?.data?.originalError?.code === 4902) {
         if (targetChainId === LOCAL_CHAIN_ID) {
-          await window.ethereum.request({
-            method: "wallet_addEthereumChain",
-            params: [
-              {
-                chainId: hexChainId,
-                chainName: "Hardhat Localhost",
-                rpcUrls: ["http://127.0.0.1:8545"],
-                nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
-              },
-            ],
-          });
+          try {
+            await window.ethereum.request({
+              method: "wallet_addEthereumChain",
+              params: [
+                {
+                  chainId: hexChainId,
+                  chainName: "Hardhat Localhost",
+                  rpcUrls: ["http://127.0.0.1:8545"],
+                  nativeCurrency: { name: "ETH", symbol: "ETH", decimals: 18 },
+                },
+              ],
+            });
+            setChainId(targetChainId);
+          } catch (addError) {
+            console.error("Could not add chain:", addError);
+          }
         }
       } else {
         console.error("Failed to switch network:", switchError);
         setTxError(switchError?.message || "Could not switch network.");
       }
     }
+  };
+
+  const ensureCorrectNetwork = async (): Promise<boolean> => {
+    if (chainId !== LOCAL_CHAIN_ID && chainId !== 11155111) {
+      await switchNetwork(LOCAL_CHAIN_ID);
+      return false;
+    }
+    return true;
   };
 
   // Listeners for account and network changes
@@ -479,6 +493,12 @@ export function Web3Provider({ children }: { children: React.ReactNode }) {
   // Claim Faucet (1,000 TEST tokens)
   const claimFaucet = async (): Promise<boolean> => {
     clearNotifications();
+    const isNetworkOk = await ensureCorrectNetwork();
+    if (!isNetworkOk) {
+      setTxError("Switched network to Hardhat Localhost. Please click 'Claim 1k TEST' again.");
+      return false;
+    }
+
     const signer = await getSigner();
     if (!signer || !account) {
       setTxError("Please connect your wallet first.");
