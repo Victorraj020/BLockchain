@@ -166,11 +166,10 @@ export default function SimpleDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
         {/* ================= STEP 1: DEPOSIT & SET HEIR ================= */}
-        <div className={`relative bg-surface-container-low border rounded-xl p-6 flex flex-col justify-between transition-all ${
-          !activeVault || showCreateForm
+        <div className={`relative bg-surface-container-low border rounded-xl p-6 flex flex-col justify-between transition-all ${!activeVault || showCreateForm
             ? "border-primary shadow-md ring-1 ring-primary/20"
             : "border-outline-variant/30 opacity-95"
-        }`}>
+          }`}>
           <div>
             <div className="flex items-center justify-between mb-4">
               <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary/20 text-primary text-xs font-bold">
@@ -290,11 +289,10 @@ export default function SimpleDashboard() {
 
 
         {/* ================= STEP 2: PROOF OF LIFE (OWNER) ================= */}
-        <div className={`relative bg-surface-container-low border rounded-xl p-6 flex flex-col justify-between transition-all ${
-          activeVault && activeVault.status === 0
+        <div className={`relative bg-surface-container-low border rounded-xl p-6 flex flex-col justify-between transition-all ${activeVault && activeVault.status === 0
             ? "border-primary shadow-lg ring-1 ring-primary/30"
             : "border-outline-variant/30"
-        }`}>
+          }`}>
           <div>
             <div className="flex items-center justify-between mb-4">
               <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary/20 text-primary text-xs font-bold">
@@ -316,13 +314,12 @@ export default function SimpleDashboard() {
             {activeVault ? (
               <div className="space-y-4">
                 {/* Live Countdown Card */}
-                <div className={`p-4 rounded-xl border text-center ${
-                  isDeadlinePassed
+                <div className={`p-4 rounded-xl border text-center ${isDeadlinePassed
                     ? "bg-danger/10 border-danger/30 text-danger"
                     : isExecuted
-                    ? "bg-surface-container border-outline-variant/30 text-outline"
-                    : "bg-surface-container/70 border-outline-variant/30 text-on-surface"
-                }`}>
+                      ? "bg-surface-container border-outline-variant/30 text-outline"
+                      : "bg-surface-container/70 border-outline-variant/30 text-on-surface"
+                  }`}>
                   <span className="text-[11px] font-mono uppercase tracking-wider block text-outline mb-1">
                     {isDeadlinePassed ? "⚠️ DEADLINE EXPIRED" : isExecuted ? "VAULT COMPLETED" : "TIME REMAINING TO CHECK IN"}
                   </span>
@@ -377,20 +374,19 @@ export default function SimpleDashboard() {
             {activeVault?.status === 0
               ? "As long as you click before 0:00, your funds remain secure."
               : isExecuted
-              ? "Switch already executed."
-              : "Awaiting active vault."}
+                ? "Switch already executed."
+                : "Awaiting active vault."}
           </div>
         </div>
 
 
         {/* ================= STEP 3: HEIR CLAIM ================= */}
-        <div className={`relative bg-surface-container-low border rounded-xl p-6 flex flex-col justify-between transition-all ${
-          isDeadlinePassed
+        <div className={`relative bg-surface-container-low border rounded-xl p-6 flex flex-col justify-between transition-all ${isDeadlinePassed
             ? "border-danger shadow-lg ring-2 ring-danger/30 bg-danger/5"
             : isExecuted
-            ? "border-success/40 bg-success/5"
-            : "border-outline-variant/30"
-        }`}>
+              ? "border-success/40 bg-success/5"
+              : "border-outline-variant/30"
+          }`}>
           <div>
             <div className="flex items-center justify-between mb-4">
               <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary/20 text-primary text-xs font-bold">
@@ -413,27 +409,26 @@ export default function SimpleDashboard() {
               {/* Status explanation */}
               <div className="p-4 rounded-xl border border-outline-variant/30 bg-surface-container/60 text-xs space-y-2">
                 <div className="flex items-center gap-2">
-                  <span className={`w-2.5 h-2.5 rounded-full ${
-                    isExecuted
+                  <span className={`w-2.5 h-2.5 rounded-full ${isExecuted
                       ? "bg-success"
                       : isDeadlinePassed
-                      ? "bg-danger animate-ping"
-                      : "bg-outline"
-                  }`} />
+                        ? "bg-danger animate-ping"
+                        : "bg-outline"
+                    }`} />
                   <span className="font-semibold text-on-surface">
                     {isExecuted
                       ? "Assets Successfully Transferred"
                       : isDeadlinePassed
-                      ? "Owner Inactive — Funds Ready to Claim!"
-                      : "Locked & Protected (Owner Active)"}
+                        ? "Owner Inactive — Funds Ready to Claim!"
+                        : "Locked & Protected (Owner Active)"}
                   </span>
                 </div>
                 <p className="text-[11px] text-outline">
                   {isExecuted
                     ? `The ${activeVault?.depositedAmount} TEST tokens were released to ${shortenAddress(activeVault?.beneficiary || "")}.`
                     : isDeadlinePassed
-                    ? "The check-in deadline has expired. Anyone or the beneficiary can now execute the transfer."
-                    : "The handover switch cannot be triggered until the timer in Step 2 reaches 0:00."}
+                      ? "The check-in deadline has expired. Anyone or the beneficiary can now execute the transfer."
+                      : "The handover switch cannot be triggered until the timer in Step 2 reaches 0:00."}
                 </p>
               </div>
 
