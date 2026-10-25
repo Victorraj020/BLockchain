@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: dead-man-switch-vault
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm --prefix frontend install && npm --prefix frontend run build
+    startCommand: npm --prefix frontend run start
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 20.12.2
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"
+      - key: NEXT_PUBLIC_DEFAULT_CHAIN_ID
+        value: "11155111"
+      - key: NEXT_PUBLIC_SEPOLIA_RPC
+        value: "https://rpc.sepolia.org"
+      - key: PORT
+        value: "10000"

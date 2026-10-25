@@ -4,410 +4,495 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useWeb3 } from "@/context/Web3Context";
 import CountdownTimer from "@/components/dashboard/CountdownTimer";
-import AegisHeroShowcase from "@/components/common/AegisHeroShowcase";
-import {
-  shortenAddress,
-  formatInterval,
-  formatTimestamp,
-  ACTION_TYPES,
-  CONTRACT_ADDRESSES,
-} from "@/lib/constants";
+import { shortenAddress, formatInterval, formatTimestamp } from "@/lib/constants";
 import {
   ShieldCheck,
   Zap,
-  ArrowRight,
-  ExternalLink,
-  Copy,
-  Check,
-  PlusCircle,
-  FileText,
+  Lock,
+  UserCheck,
   Clock,
-  Sparkles,
-  AlertTriangle,
-  Flame,
-  CheckCircle2,
-  Info,
+  ArrowRight,
   FastForward,
+  CheckCircle2,
+  AlertTriangle,
+  Coins,
+  Wallet,
+  Sparkles,
+  RefreshCw,
+  PlusCircle,
+  HelpCircle
 } from "lucide-react";
 
-export default function Dashboard() {
+export default function SimpleDashboard() {
   const {
     account,
     isConnected,
     connectWallet,
+    ethBalance,
+    tokenBalance,
+    claimFaucet,
     activeVault,
     vaults,
     setActiveVaultId,
     checkIn,
     triggerSwitch,
     fastForwardTime,
+    approveAndCreateVault,
     txPending,
     isLoadingVaults,
   } = useWeb3();
 
-  const [copiedBeneficiary, setCopiedBeneficiary] = useState(false);
-  const [copiedContract, setCopiedContract] = useState(false);
+  // Step 1 Create Vault Form State
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [beneficiary, setBeneficiary] = useState("");
+  const [depositAmount, setDepositAmount] = useState("100");
+  const [intervalSeconds, setIntervalSeconds] = useState(60); // 1 minute demo default
+  const [isCreating, setIsCreating] = useState(false);
   const [isSimulating, setIsSimulating] = useState(false);
 
-  const copyText = (text: string, type: "beneficiary" | "contract") => {
-    navigator.clipboard.writeText(text);
-    if (type === "beneficiary") {
-      setCopiedBeneficiary(true);
-      setTimeout(() => setCopiedBeneficiary(false), 2000);
-    } else {
-      setCopiedContract(true);
-      setTimeout(() => setCopiedContract(false), 2000);
-    }
-  };
+  // Default demo beneficiary (Account #1 in Hardhat)
+  const DEMO_HEIR_ADDRESS = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8";
 
   const now = Math.floor(Date.now() / 1000);
   const isDeadlinePassed =
     activeVault && activeVault.status === 0 && now > activeVault.deadline;
+  const isExecuted = activeVault && activeVault.status === 1;
 
-  const handleSimulateExpiry = async () => {
+  const handleCreateVault = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!beneficiary) return;
+    setIsCreating(true);
+    const result = await approveAndCreateVault({
+      name: "Emergency Contingency Vault",
+      description: "Automated digital inheritance vault",
+      beneficiary: beneficiary.trim(),
+      checkInInterval: Number(intervalSeconds),
+      actionType: 0, // TOKEN_TRANSFER
+      tokenAmount: depositAmount,
+      payloadHash: "ipfs://contingency-vault-payload",
+    });
+    setIsCreating(false);
+    if (result.success) {
+      setShowCreateForm(false);
+    }
+  };
+
+  const handleSimulateTimeout = async () => {
     if (!activeVault) return;
     setIsSimulating(true);
-    // Fast forward enough seconds to exceed the remaining deadline
     const remaining = Math.max(activeVault.deadline - Math.floor(Date.now() / 1000) + 5, 65);
     await fastForwardTime(remaining);
     setIsSimulating(false);
   };
 
   return (
-    <div className="flex flex-col gap-6 animate-in fade-in duration-200">
-      {/* Aegis Hero Showcase with 3D interactive wallet animation */}
-      <AegisHeroShowcase />
-
-      {/* Top Header & Greeting Area */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div className="max-w-5xl mx-auto space-y-8 py-2 animate-in fade-in duration-300">
+      {/* Clean Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-outline-variant/30">
         <div>
-          <div className="flex items-center gap-1.5 font-mono text-xs text-outline mb-1">
-            <span>Workspace</span>
-            <span>/</span>
-            <span className="text-on-surface">Dashboard</span>
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium mb-2">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>Dead-Man Switch Protocol</span>
           </div>
-          <h1 className="text-2xl md:text-3xl font-semibold text-on-surface tracking-tight">
-            {isConnected
-              ? `Welcome back, ${shortenAddress(account || "", 4)}`
-              : "Contingency Vault Overview"}
+          <h1 className="text-2xl md:text-3xl font-bold text-on-surface tracking-tight">
+            Digital Contingency Vault
           </h1>
-          <p className="text-sm text-outline mt-1">
-            Autonomous blockchain-enforced asset and secret contingency protocol.
+          <p className="text-sm text-outline mt-1 max-w-xl">
+            A simple 3-step fail-safe: lock your assets, check in to prove you're active, and if you miss your deadline, your heir claims everything automatically.
           </p>
         </div>
 
-        {/* Vault Switcher & Create Vault CTA */}
-        <div className="flex items-center gap-2 self-start md:self-auto">
-          {vaults.length > 1 && (
-            <select
-              value={activeVault?.id || 1}
-              onChange={(e) => setActiveVaultId(Number(e.target.value))}
-              className="bg-surface-container-low border border-outline-variant/40 rounded px-3 py-1.5 text-xs font-mono text-on-surface focus:outline-none focus:border-primary"
+        {/* Wallet & Quick Faucet Header Bar */}
+        <div className="flex items-center gap-3">
+          {!isConnected ? (
+            <button
+              onClick={connectWallet}
+              className="bg-primary hover:bg-primary-hover text-white text-sm font-semibold px-5 py-2.5 rounded-lg shadow-md transition-all flex items-center gap-2"
             >
-              {vaults.map((v) => (
-                <option key={v.id} value={v.id}>
-                  Vault #{v.id} — {v.name}
-                </option>
-              ))}
-            </select>
+              <Wallet className="w-4 h-4" />
+              <span>Connect Wallet</span>
+            </button>
+          ) : (
+            <div className="flex items-center gap-2 bg-surface-container-low border border-outline-variant/30 rounded-lg p-2 text-xs">
+              <div className="px-2 py-1 bg-surface-container rounded font-mono text-outline">
+                {shortenAddress(account || "", 4)}
+              </div>
+              <div className="px-2 py-1 font-mono text-on-surface font-medium">
+                {tokenBalance} TEST
+              </div>
+              {Number(tokenBalance) < 50 && (
+                <button
+                  onClick={claimFaucet}
+                  disabled={txPending}
+                  className="px-2.5 py-1 rounded bg-primary/20 hover:bg-primary/30 text-primary font-medium transition-colors"
+                  title="Claim 1,000 free TEST tokens to fund your vault"
+                >
+                  + Free Tokens
+                </button>
+              )}
+            </div>
           )}
-
-          <Link
-            href="/create-vault"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-primary/10 border border-primary/40 hover:bg-primary/20 text-primary text-xs font-medium transition-colors"
-          >
-            <PlusCircle className="w-3.5 h-3.5" />
-            <span>New Vault</span>
-          </Link>
         </div>
       </div>
 
-      {/* Main Contingency Status Panel */}
-      {activeVault ? (
-        <div className="bg-surface-container-low border border-outline-variant/30 rounded-lg p-5 md:p-6 shadow-sm">
-          {/* Panel Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-outline-variant/20 gap-3">
-            <div className="flex items-center gap-3">
-              <span className="text-base font-medium text-on-surface">
-                Vault #{activeVault.id} — {activeVault.name}
-              </span>
-              <span className="text-xs px-2 py-0.5 rounded bg-surface-container border border-outline-variant/30 text-outline font-mono">
-                {formatInterval(activeVault.checkInInterval)} cycle
-              </span>
-            </div>
-
-            <div className="flex items-center gap-2 text-xs font-mono text-outline">
-              <span>Last check-in:</span>
-              <span className="text-on-surface font-medium">
-                {formatTimestamp(activeVault.lastCheckIn)}
-              </span>
-            </div>
+      {/* Vault Switcher (If multiple vaults exist) */}
+      {vaults.length > 1 && (
+        <div className="flex items-center justify-between bg-surface-container-low border border-outline-variant/30 rounded-lg px-4 py-2.5 text-xs">
+          <span className="text-outline font-medium">Selected Vault:</span>
+          <div className="flex items-center gap-2">
+            <select
+              value={activeVault?.id || 1}
+              onChange={(e) => setActiveVaultId(Number(e.target.value))}
+              className="bg-surface-container border border-outline-variant/40 rounded px-2.5 py-1 text-on-surface font-mono focus:outline-none focus:border-primary"
+            >
+              {vaults.map((v) => (
+                <option key={v.id} value={v.id}>
+                  Vault #{v.id} — {v.name} ({v.depositedAmount} TEST)
+                </option>
+              ))}
+            </select>
+            <button
+              onClick={() => setShowCreateForm(true)}
+              className="text-primary hover:underline flex items-center gap-1 font-medium"
+            >
+              <PlusCircle className="w-3.5 h-3.5" />
+              <span>New</span>
+            </button>
           </div>
+        </div>
+      )}
 
-          {/* Countdown Unit */}
-          <div className="py-6 border-b border-outline-variant/20">
-            <CountdownTimer
-              deadline={activeVault.deadline}
-              lastCheckIn={activeVault.lastCheckIn}
-              status={activeVault.status}
-            />
-          </div>
+      {/* 3-STEP VISUAL PROGRESSION */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-          {/* Action Execution Bar */}
-          <div className="pt-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex flex-wrap items-center gap-3">
-              {/* "I'm Still Active" Proof-of-life Button */}
-              {activeVault.status === 0 && (
-                <button
-                  onClick={() => checkIn(activeVault.id)}
-                  disabled={txPending}
-                  className="bg-primary hover:bg-primary-hover active:bg-primary-active disabled:opacity-50 text-white font-medium text-sm px-6 py-2.5 rounded shadow transition-colors flex items-center gap-2"
-                >
-                  <ShieldCheck className="w-4 h-4" />
-                  <span>I'm Still Active</span>
-                </button>
-              )}
-
-              {/* "Trigger Switch" button when deadline passed */}
-              {isDeadlinePassed && (
-                <button
-                  onClick={() => triggerSwitch(activeVault.id)}
-                  disabled={txPending}
-                  className="bg-danger hover:bg-danger-hover text-white font-medium text-sm px-6 py-2.5 rounded shadow transition-colors flex items-center gap-2 animate-pulse"
-                >
-                  <Zap className="w-4 h-4" />
-                  <span>Trigger Contingency Switch</span>
-                </button>
-              )}
-
-              <span className="text-xs text-outline">
-                {activeVault.status === 0
-                  ? `Checking in submits an on-chain transaction resetting your deadline to ${formatInterval(
-                      activeVault.checkInInterval
-                    )} from confirmation.`
-                  : activeVault.status === 1
-                  ? "This contingency vault was triggered and executed."
-                  : "This vault was cancelled by its owner."}
+        {/* ================= STEP 1: DEPOSIT & SET HEIR ================= */}
+        <div className={`relative bg-surface-container-low border rounded-xl p-6 flex flex-col justify-between transition-all ${
+          !activeVault || showCreateForm
+            ? "border-primary shadow-md ring-1 ring-primary/20"
+            : "border-outline-variant/30 opacity-95"
+        }`}>
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary/20 text-primary text-xs font-bold">
+                1
+              </span>
+              <span className="text-xs font-medium text-outline uppercase tracking-wider">
+                Setup
               </span>
             </div>
 
-            {/* Local Testing Tool: Simulate Missed Deadline */}
-            {activeVault.status === 0 && (
-              <button
-                onClick={handleSimulateExpiry}
-                disabled={isSimulating || txPending}
-                className="flex items-center gap-1.5 border border-outline-variant/40 hover:border-outline text-outline hover:text-on-surface font-mono text-xs px-3 py-1.5 rounded transition-colors self-start md:self-auto"
-                title="Calls Hardhat evm_increaseTime to advance the local blockchain clock past the deadline"
-              >
-                <FastForward className="w-3.5 h-3.5 text-warning" />
-                <span>Simulate Missed Deadline (Test Trigger)</span>
-              </button>
+            <h2 className="text-lg font-bold text-on-surface mb-1 flex items-center gap-2">
+              <Lock className="w-4 h-4 text-primary" />
+              Deposit & Set Heir
+            </h2>
+            <p className="text-xs text-outline mb-5">
+              Lock funds in escrow and designate the wallet that inherits them.
+            </p>
+
+            {activeVault && !showCreateForm ? (
+              /* Already created summary */
+              <div className="space-y-3 bg-surface-container/60 border border-outline-variant/20 rounded-lg p-4 text-xs font-mono">
+                <div>
+                  <span className="text-outline block text-[11px]">LOCKED AMOUNT</span>
+                  <span className="text-base font-bold text-on-surface">
+                    {activeVault.depositedAmount} TEST
+                  </span>
+                </div>
+                <div>
+                  <span className="text-outline block text-[11px]">BENEFICIARY (HEIR)</span>
+                  <span className="text-primary font-medium truncate block">
+                    {activeVault.beneficiary}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-outline block text-[11px]">CHECK-IN INTERVAL</span>
+                  <span className="text-on-surface font-medium">
+                    Every {formatInterval(activeVault.checkInInterval)}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              /* Create Vault Form */
+              <form onSubmit={handleCreateVault} className="space-y-3.5 text-xs">
+                <div>
+                  <label className="block text-outline font-medium mb-1">
+                    Heir / Beneficiary Address
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="0x..."
+                    value={beneficiary}
+                    onChange={(e) => setBeneficiary(e.target.value)}
+                    className="w-full bg-surface-container border border-outline-variant/40 rounded px-3 py-2 text-on-surface font-mono focus:outline-none focus:border-primary"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setBeneficiary(DEMO_HEIR_ADDRESS)}
+                    className="text-[11px] text-primary hover:underline mt-1 block font-medium"
+                  >
+                    Use Demo Heir (Account #1)
+                  </button>
+                </div>
+
+                <div>
+                  <label className="block text-outline font-medium mb-1">
+                    Amount to Lock (TEST Tokens)
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    required
+                    value={depositAmount}
+                    onChange={(e) => setDepositAmount(e.target.value)}
+                    className="w-full bg-surface-container border border-outline-variant/40 rounded px-3 py-2 text-on-surface font-mono focus:outline-none focus:border-primary"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-outline font-medium mb-1">
+                    Required Check-in Frequency
+                  </label>
+                  <select
+                    value={intervalSeconds}
+                    onChange={(e) => setIntervalSeconds(Number(e.target.value))}
+                    className="w-full bg-surface-container border border-outline-variant/40 rounded px-3 py-2 text-on-surface focus:outline-none focus:border-primary"
+                  >
+                    <option value={60}>1 Minute (Fast Testing Demo)</option>
+                    <option value={3600}>1 Hour</option>
+                    <option value={86400}>1 Day</option>
+                    <option value={604800}>7 Days</option>
+                    <option value={2592000}>30 Days</option>
+                  </select>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isCreating || txPending || !isConnected}
+                  className="w-full mt-2 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 shadow"
+                >
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>{isCreating ? "Locking Funds..." : "Lock in Vault"}</span>
+                </button>
+              </form>
             )}
           </div>
-        </div>
-      ) : (
-        /* Empty State CTA */
-        <div className="bg-surface-container-low border border-outline-variant/30 rounded-lg p-10 text-center flex flex-col items-center">
-          <div className="w-12 h-12 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-primary mb-4">
-            <PlusCircle className="w-6 h-6" />
-          </div>
-          <h2 className="text-lg font-semibold text-on-surface">No contingency vaults found</h2>
-          <p className="text-sm text-outline max-w-md mt-1">
-            Create your first decentralized contingency vault with customizable check-in intervals,
-            beneficiary designation, and automated asset handover.
-          </p>
-          <div className="flex gap-3 mt-6">
-            <Link
-              href="/create-vault"
-              className="bg-primary hover:bg-primary-hover text-white text-xs font-medium px-5 py-2.5 rounded transition-colors flex items-center gap-2"
+
+          {activeVault && !showCreateForm && (
+            <button
+              onClick={() => setShowCreateForm(true)}
+              className="mt-4 w-full py-2 border border-outline-variant/40 hover:border-primary text-outline hover:text-primary rounded-lg text-xs font-medium transition-colors"
             >
-              <span>Create New Vault</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+              + Create Another Vault
+            </button>
+          )}
+        </div>
+
+
+        {/* ================= STEP 2: PROOF OF LIFE (OWNER) ================= */}
+        <div className={`relative bg-surface-container-low border rounded-xl p-6 flex flex-col justify-between transition-all ${
+          activeVault && activeVault.status === 0
+            ? "border-primary shadow-lg ring-1 ring-primary/30"
+            : "border-outline-variant/30"
+        }`}>
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary/20 text-primary text-xs font-bold">
+                2
+              </span>
+              <span className="text-xs font-medium text-outline uppercase tracking-wider">
+                Proof-of-Life
+              </span>
+            </div>
+
+            <h2 className="text-lg font-bold text-on-surface mb-1 flex items-center gap-2">
+              <UserCheck className="w-4 h-4 text-primary" />
+              Check-In ("I'm Alive")
+            </h2>
+            <p className="text-xs text-outline mb-4">
+              Click periodically to reset your deadline and prevent automatic handover.
+            </p>
+
+            {activeVault ? (
+              <div className="space-y-4">
+                {/* Live Countdown Card */}
+                <div className={`p-4 rounded-xl border text-center ${
+                  isDeadlinePassed
+                    ? "bg-danger/10 border-danger/30 text-danger"
+                    : isExecuted
+                    ? "bg-surface-container border-outline-variant/30 text-outline"
+                    : "bg-surface-container/70 border-outline-variant/30 text-on-surface"
+                }`}>
+                  <span className="text-[11px] font-mono uppercase tracking-wider block text-outline mb-1">
+                    {isDeadlinePassed ? "⚠️ DEADLINE EXPIRED" : isExecuted ? "VAULT COMPLETED" : "TIME REMAINING TO CHECK IN"}
+                  </span>
+
+                  <div className="py-1">
+                    <CountdownTimer
+                      deadline={activeVault.deadline}
+                      lastCheckIn={activeVault.lastCheckIn}
+                      status={activeVault.status}
+                    />
+                  </div>
+
+                  <span className="text-[11px] font-mono text-outline block mt-1">
+                    Last ping: {formatTimestamp(activeVault.lastCheckIn)}
+                  </span>
+                </div>
+
+                {/* THE BIG "I AM ALIVE" BUTTON */}
+                {activeVault.status === 0 && (
+                  <button
+                    onClick={() => checkIn(activeVault.id)}
+                    disabled={txPending}
+                    className="w-full py-4 px-4 rounded-xl bg-gradient-to-r from-primary to-indigo-600 hover:from-primary-hover hover:to-indigo-500 active:scale-[0.99] text-white font-bold text-base shadow-lg shadow-primary/25 transition-all flex items-center justify-center gap-2"
+                  >
+                    <ShieldCheck className="w-5 h-5 text-white" />
+                    <span>I'm Alive (Reset Deadline)</span>
+                  </button>
+                )}
+
+                {/* Fast-forward test tool */}
+                {activeVault.status === 0 && (
+                  <div className="pt-2 text-center">
+                    <button
+                      onClick={handleSimulateTimeout}
+                      disabled={isSimulating || txPending}
+                      className="inline-flex items-center gap-1.5 text-[11px] font-mono text-warning hover:underline"
+                    >
+                      <FastForward className="w-3.5 h-3.5" />
+                      <span>{isSimulating ? "Fast-forwarding clock..." : "Simulate timeout (1-click test)"}</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="p-8 text-center text-outline text-xs bg-surface-container/30 rounded-xl border border-dashed border-outline-variant/30">
+                Complete Step 1 to activate your check-in timer.
+              </div>
+            )}
+          </div>
+
+          <div className="mt-4 pt-3 border-t border-outline-variant/20 text-[11px] text-outline text-center">
+            {activeVault?.status === 0
+              ? "As long as you click before 0:00, your funds remain secure."
+              : isExecuted
+              ? "Switch already executed."
+              : "Awaiting active vault."}
           </div>
         </div>
-      )}
 
-      {/* Two-Column Telemetry & Details Grid */}
-      {activeVault && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Left: Vault Configuration Parameters */}
-          <div className="lg:col-span-7 bg-surface-container-low border border-outline-variant/30 rounded-lg p-5">
-            <div className="flex items-center justify-between pb-4 border-b border-outline-variant/20">
-              <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-outline" />
-                <h2 className="text-sm font-semibold text-on-surface">Vault Configuration</h2>
-              </div>
-              <Link
-                href="/my-vault"
-                className="text-xs text-primary hover:underline flex items-center gap-1"
-              >
-                <span>Manage Vault</span>
-                <ArrowRight className="w-3 h-3" />
-              </Link>
+
+        {/* ================= STEP 3: HEIR CLAIM ================= */}
+        <div className={`relative bg-surface-container-low border rounded-xl p-6 flex flex-col justify-between transition-all ${
+          isDeadlinePassed
+            ? "border-danger shadow-lg ring-2 ring-danger/30 bg-danger/5"
+            : isExecuted
+            ? "border-success/40 bg-success/5"
+            : "border-outline-variant/30"
+        }`}>
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-primary/20 text-primary text-xs font-bold">
+                3
+              </span>
+              <span className="text-xs font-medium text-outline uppercase tracking-wider">
+                Contingency
+              </span>
             </div>
 
-            <div className="divide-y divide-outline-variant/20 text-xs">
-              {/* Beneficiary */}
-              <div className="py-3.5 flex items-center justify-between gap-4">
-                <span className="text-outline shrink-0">Beneficiary Wallet</span>
-                <div className="flex items-center gap-2 text-right">
-                  <span className="font-mono text-on-surface">
-                    {shortenAddress(activeVault.beneficiary, 6)}
-                  </span>
-                  <button
-                    onClick={() => copyText(activeVault.beneficiary, "beneficiary")}
-                    className="text-outline hover:text-on-surface p-0.5 rounded transition-colors"
-                    title="Copy Beneficiary Address"
-                  >
-                    {copiedBeneficiary ? (
-                      <Check className="w-3.5 h-3.5 text-secondary" />
-                    ) : (
-                      <Copy className="w-3.5 h-3.5" />
-                    )}
-                  </button>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-surface-container border border-outline-variant/40 text-on-surface-variant font-mono">
-                    Designated Heir
+            <h2 className="text-lg font-bold text-on-surface mb-1 flex items-center gap-2">
+              <Zap className="w-4 h-4 text-warning" />
+              Heir Claim Handover
+            </h2>
+            <p className="text-xs text-outline mb-4">
+              If the owner fails to check in, the heir claims the locked assets.
+            </p>
+
+            <div className="space-y-4">
+              {/* Status explanation */}
+              <div className="p-4 rounded-xl border border-outline-variant/30 bg-surface-container/60 text-xs space-y-2">
+                <div className="flex items-center gap-2">
+                  <span className={`w-2.5 h-2.5 rounded-full ${
+                    isExecuted
+                      ? "bg-success"
+                      : isDeadlinePassed
+                      ? "bg-danger animate-ping"
+                      : "bg-outline"
+                  }`} />
+                  <span className="font-semibold text-on-surface">
+                    {isExecuted
+                      ? "Assets Successfully Transferred"
+                      : isDeadlinePassed
+                      ? "Owner Inactive — Funds Ready to Claim!"
+                      : "Locked & Protected (Owner Active)"}
                   </span>
                 </div>
+                <p className="text-[11px] text-outline">
+                  {isExecuted
+                    ? `The ${activeVault?.depositedAmount} TEST tokens were released to ${shortenAddress(activeVault?.beneficiary || "")}.`
+                    : isDeadlinePassed
+                    ? "The check-in deadline has expired. Anyone or the beneficiary can now execute the transfer."
+                    : "The handover switch cannot be triggered until the timer in Step 2 reaches 0:00."}
+                </p>
               </div>
 
-              {/* Vault Owner */}
-              <div className="py-3.5 flex items-center justify-between gap-4">
-                <span className="text-outline shrink-0">Vault Creator / Owner</span>
-                <div className="flex items-center gap-2 text-right font-mono text-on-surface">
-                  {shortenAddress(activeVault.owner, 6)}
-                  {account && activeVault.owner.toLowerCase() === account.toLowerCase() && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-primary/20 text-primary-light font-mono">
-                      You
-                    </span>
-                  )}
+              {/* CLAIM TRIGGER BUTTON */}
+              {isDeadlinePassed ? (
+                <button
+                  onClick={() => activeVault && triggerSwitch(activeVault.id)}
+                  disabled={txPending}
+                  className="w-full py-4 px-4 rounded-xl bg-danger hover:bg-danger-hover active:scale-[0.99] text-white font-bold text-sm shadow-lg shadow-danger/25 transition-all flex items-center justify-center gap-2 animate-pulse"
+                >
+                  <Zap className="w-4 h-4" />
+                  <span>Claim Contingency Funds Now</span>
+                </button>
+              ) : isExecuted ? (
+                <div className="p-3 bg-success/10 border border-success/30 rounded-xl flex items-center justify-center gap-2 text-success font-medium text-xs">
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>Executed — Beneficiary Received Assets</span>
                 </div>
-              </div>
-
-              {/* Action */}
-              <div className="py-3.5 flex items-center justify-between gap-4">
-                <span className="text-outline shrink-0">Predefined Action</span>
-                <div className="flex items-center gap-2 text-right">
-                  <span className="text-on-surface font-medium">
-                    {ACTION_TYPES[activeVault.actionType]?.title || "Token Transfer"}
-                  </span>
-                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-surface-container border border-outline-variant/40 text-outline font-mono">
-                    ERC-20 Handover
-                  </span>
-                </div>
-              </div>
-
-              {/* Amount */}
-              <div className="py-3.5 flex items-center justify-between gap-4">
-                <span className="text-outline shrink-0">Configured Handover Amount</span>
-                <div className="text-right">
-                  <span className="font-mono font-medium text-on-surface">
-                    {activeVault.tokenAmount} TEST
-                  </span>
-                  <span className="text-outline ml-1.5 font-mono">
-                    (Locked: {activeVault.depositedAmount} TEST)
-                  </span>
-                </div>
-              </div>
-
-              {/* Check-in Interval */}
-              <div className="py-3.5 flex items-center justify-between gap-4">
-                <span className="text-outline shrink-0">Check-In Interval</span>
-                <div className="text-right">
-                  <span className="text-on-surface font-medium">
-                    {formatInterval(activeVault.checkInInterval)}
-                  </span>
-                  <span className="text-outline ml-1.5">
-                    ({activeVault.checkInInterval} seconds)
-                  </span>
-                </div>
-              </div>
-
-              {/* Smart Contract */}
-              <div className="py-3.5 flex items-center justify-between gap-4">
-                <span className="text-outline shrink-0">DeadManSwitch Contract</span>
-                <div className="flex items-center gap-2 text-right">
-                  <span className="font-mono text-on-surface">
-                    {shortenAddress(CONTRACT_ADDRESSES.deadManSwitch, 6)}
-                  </span>
-                  <button
-                    onClick={() => copyText(CONTRACT_ADDRESSES.deadManSwitch, "contract")}
-                    className="text-outline hover:text-on-surface p-0.5 rounded transition-colors"
-                    title="Copy Contract Address"
-                  >
-                    {copiedContract ? (
-                      <Check className="w-3.5 h-3.5 text-secondary" />
-                    ) : (
-                      <Copy className="w-3.5 h-3.5" />
-                    )}
-                  </button>
-                  <span className="font-mono text-[10px] text-secondary">Verified</span>
-                </div>
-              </div>
+              ) : (
+                <button
+                  disabled
+                  className="w-full py-3.5 px-4 rounded-xl bg-surface-container border border-outline-variant/30 text-outline text-xs font-medium cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>Trigger Locked (Owner is Active)</span>
+                </button>
+              )}
             </div>
           </div>
 
-          {/* Right: Security & Operational Telemetry */}
-          <div className="lg:col-span-5 flex flex-col gap-5">
-            {/* Security Principles Card */}
-            <div className="bg-surface-container-low border border-outline-variant/30 rounded-lg p-5">
-              <div className="flex items-center gap-2 pb-3 border-b border-outline-variant/20">
-                <Info className="w-4 h-4 text-primary" />
-                <h3 className="text-xs font-semibold text-on-surface uppercase tracking-wider font-mono">
-                  Autonomous Verification Rules
-                </h3>
-              </div>
-              <ul className="text-xs text-on-surface-variant divide-y divide-outline-variant/10">
-                <li className="py-2.5 flex items-start gap-2">
-                  <span className="text-secondary font-bold">1.</span>
-                  <span>
-                    Smart contracts cannot self-execute. Once deadline elapses, anyone or keeper
-                    bots may trigger the payout.
-                  </span>
-                </li>
-                <li className="py-2.5 flex items-start gap-2">
-                  <span className="text-secondary font-bold">2.</span>
-                  <span>
-                    The contract strictly calculates eligibility on-chain using block timestamps.
-                    Frontend timers are visual aids only.
-                  </span>
-                </li>
-                <li className="py-2.5 flex items-start gap-2">
-                  <span className="text-secondary font-bold">3.</span>
-                  <span>
-                    Beneficiary designation verifies inactivity—it does not legally certify
-                    incapacity or death.
-                  </span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Quick Actions Card */}
-            <div className="bg-surface-container-low border border-outline-variant/30 rounded-lg p-5">
-              <h3 className="text-xs font-semibold text-on-surface uppercase tracking-wider font-mono mb-3">
-                Quick Actions
-              </h3>
-              <div className="grid grid-cols-2 gap-2">
-                <Link
-                  href="/activity-log"
-                  className="flex items-center gap-2 p-2.5 rounded bg-surface-container border border-outline-variant/30 hover:border-outline text-xs text-on-surface transition-colors"
-                >
-                  <Clock className="w-4 h-4 text-primary" />
-                  <span>Activity Log</span>
-                </Link>
-                <Link
-                  href="/beneficiary"
-                  className="flex items-center gap-2 p-2.5 rounded bg-surface-container border border-outline-variant/30 hover:border-outline text-xs text-on-surface transition-colors"
-                >
-                  <Zap className="w-4 h-4 text-warning" />
-                  <span>Claim Portal</span>
-                </Link>
-              </div>
-            </div>
+          <div className="mt-4 pt-3 border-t border-outline-variant/20 text-[11px] text-outline text-center">
+            Beneficiary receives funds directly in their wallet upon claim.
           </div>
         </div>
-      )}
+
+      </div>
+
+      {/* Simple Instruction Card at the bottom */}
+      <div className="bg-surface-container-low border border-outline-variant/20 rounded-xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs">
+        <div className="flex items-start gap-3">
+          <div className="p-2 rounded-lg bg-primary/10 text-primary mt-0.5">
+            <HelpCircle className="w-4 h-4" />
+          </div>
+          <div>
+            <span className="font-semibold text-on-surface block text-sm">How to test this in 30 seconds:</span>
+            <span className="text-outline">
+              1. Click <b>"I'm Alive"</b> to see the timer reset. 2. Click <b>"Simulate timeout"</b> to skip time forward. 3. Click <b>"Claim Contingency Funds"</b> to finish the handover!
+            </span>
+          </div>
+        </div>
+
+        <Link
+          href="/activity-log"
+          className="text-primary hover:underline font-medium flex items-center gap-1 whitespace-nowrap self-end md:self-auto"
+        >
+          <span>View On-Chain Activity Log</span>
+          <ArrowRight className="w-3 h-3" />
+        </Link>
+      </div>
     </div>
   );
 }

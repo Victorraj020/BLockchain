@@ -1,7 +1,7 @@
 {
   "network": "localhost",
   "chainId": 31337,
-  "deployedAt": "2026-10-21T09:21:32.750Z",
+  "deployedAt": "2026-10-25T21:56:51.120Z",
   "contracts": {
     "TestToken": {
       "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3"
