@@ -118,23 +118,23 @@ export default function CountdownTimer({
       </div>
 
       {/* Tabular Monospace Countdown Display */}
-      <div className="grid grid-cols-4 sm:flex sm:items-center gap-2 sm:gap-3">
+      <div className="grid grid-cols-4 sm:flex sm:items-center gap-1.5 sm:gap-3">
         {/* Days */}
         <div
-          className={`border rounded px-4 py-3 text-center sm:min-w-[105px] transition-colors ${
+          className={`border rounded-lg px-1.5 sm:px-4 py-2 sm:py-3 text-center sm:min-w-[100px] transition-colors ${
             timeLeft.isExpired
               ? "bg-danger/10 border-danger/40"
               : "bg-surface-container border-outline-variant/40"
           }`}
         >
           <div
-            className={`font-mono text-2xl sm:text-3xl font-semibold tabular-nums ${
+            className={`font-mono text-lg sm:text-3xl font-semibold tabular-nums ${
               timeLeft.isExpired ? "text-danger" : "text-on-surface"
             }`}
           >
             {pad(timeLeft.days)}
           </div>
-          <div className="font-mono text-[10px] tracking-wider text-outline uppercase mt-0.5">
+          <div className="font-mono text-[9px] sm:text-[10px] tracking-wider text-outline uppercase mt-0.5">
             DAYS
           </div>
         </div>
@@ -143,20 +143,20 @@ export default function CountdownTimer({
 
         {/* Hours */}
         <div
-          className={`border rounded px-4 py-3 text-center sm:min-w-[105px] transition-colors ${
+          className={`border rounded-lg px-1.5 sm:px-4 py-2 sm:py-3 text-center sm:min-w-[100px] transition-colors ${
             timeLeft.isExpired
               ? "bg-danger/10 border-danger/40"
               : "bg-surface-container border-outline-variant/40"
           }`}
         >
           <div
-            className={`font-mono text-2xl sm:text-3xl font-semibold tabular-nums ${
+            className={`font-mono text-lg sm:text-3xl font-semibold tabular-nums ${
               timeLeft.isExpired ? "text-danger" : "text-on-surface"
             }`}
           >
             {pad(timeLeft.hours)}
           </div>
-          <div className="font-mono text-[10px] tracking-wider text-outline uppercase mt-0.5">
+          <div className="font-mono text-[9px] sm:text-[10px] tracking-wider text-outline uppercase mt-0.5">
             HOURS
           </div>
         </div>
@@ -165,20 +165,20 @@ export default function CountdownTimer({
 
         {/* Minutes */}
         <div
-          className={`border rounded px-4 py-3 text-center sm:min-w-[105px] transition-colors ${
+          className={`border rounded-lg px-1.5 sm:px-4 py-2 sm:py-3 text-center sm:min-w-[100px] transition-colors ${
             timeLeft.isExpired
               ? "bg-danger/10 border-danger/40"
               : "bg-surface-container border-outline-variant/40"
           }`}
         >
           <div
-            className={`font-mono text-2xl sm:text-3xl font-semibold tabular-nums ${
+            className={`font-mono text-lg sm:text-3xl font-semibold tabular-nums ${
               timeLeft.isExpired ? "text-danger" : "text-on-surface"
             }`}
           >
             {pad(timeLeft.minutes)}
           </div>
-          <div className="font-mono text-[10px] tracking-wider text-outline uppercase mt-0.5">
+          <div className="font-mono text-[9px] sm:text-[10px] tracking-wider text-outline uppercase mt-0.5">
             MINUTES
           </div>
         </div>
@@ -187,14 +187,14 @@ export default function CountdownTimer({
 
         {/* Seconds */}
         <div
-          className={`border rounded px-4 py-3 text-center sm:min-w-[105px] transition-colors ${
+          className={`border rounded-lg px-1.5 sm:px-4 py-2 sm:py-3 text-center sm:min-w-[100px] transition-colors ${
             timeLeft.isExpired
               ? "bg-danger/10 border-danger/40"
               : "bg-surface-container border-outline-variant/40"
           }`}
         >
           <div
-            className={`font-mono text-2xl sm:text-3xl font-semibold tabular-nums ${
+            className={`font-mono text-lg sm:text-3xl font-semibold tabular-nums ${
               timeLeft.isExpired ? "text-danger" : "text-on-surface"
             }`}
           >

@@ -55,16 +55,15 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 md:left-[230px] right-0 h-14 bg-surface-container-lowest/90 backdrop-blur-md border-b border-outline-variant/40 z-40 flex items-center justify-between px-4 md:px-6">
+    <header className="fixed top-0 left-0 md:left-[230px] right-0 h-14 bg-surface-container-lowest/90 backdrop-blur-md border-b border-outline-variant/40 z-40 flex items-center justify-between px-2.5 sm:px-4 md:px-6">
       {/* Breadcrumb Left */}
-      <div className="flex items-center gap-2 pl-10 md:pl-0">
-        <span className="text-xs font-mono text-outline">Workspace</span>
-        <span className="text-outline text-xs">/</span>
-        <span className="text-xs font-medium text-on-surface">Dead-Man Switch</span>
+      <div className="flex items-center gap-1.5 sm:gap-2 pl-12 md:pl-0 min-w-0">
+        <span className="hidden sm:inline text-xs font-mono text-outline">Workspace /</span>
+        <span className="text-xs font-semibold text-on-surface truncate">Dead-Man Switch</span>
       </div>
 
       {/* Action Controls Right */}
-      <div className="flex items-center gap-2 md:gap-3">
+      <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 shrink-0">
         {/* Refresh Contract Data */}
         <button
           onClick={() => refreshData()}
@@ -126,17 +125,17 @@ export default function Header() {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded bg-surface-container border border-outline-variant/40 hover:border-outline text-on-surface transition-colors"
+                className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 rounded bg-surface-container border border-outline-variant/40 hover:border-outline text-on-surface transition-colors"
               >
-                <div className="w-2 h-2 rounded-full bg-secondary" />
-                <span className="font-mono text-xs font-medium">
+                <div className="w-2 h-2 rounded-full bg-secondary shrink-0" />
+                <span className="font-mono text-xs font-medium truncate max-w-[70px] sm:max-w-none">
                   {shortenAddress(account || "", 4)}
                 </span>
-                <ChevronDown className="w-3.5 h-3.5 text-outline" />
+                <ChevronDown className="w-3.5 h-3.5 text-outline shrink-0" />
               </button>
 
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-56 rounded-md bg-surface-container border border-outline-variant/40 shadow-xl py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
+                <div className="absolute right-0 mt-2 w-[calc(100vw-1.5rem)] sm:w-56 max-w-xs rounded-md bg-surface-container border border-outline-variant/40 shadow-xl py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
                   <div className="px-3 py-2 border-b border-outline-variant/30">
                     <p className="text-[11px] text-outline font-mono">Connected Account</p>
                     <p className="text-xs font-mono text-on-surface mt-0.5 truncate">

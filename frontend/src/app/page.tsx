@@ -163,10 +163,10 @@ export default function SimpleDashboard() {
       )}
 
       {/* 3-STEP VISUAL PROGRESSION */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
 
         {/* ================= STEP 1: DEPOSIT & SET HEIR ================= */}
-        <div className={`relative bg-surface-container-low border rounded-xl p-6 flex flex-col justify-between transition-all ${!activeVault || showCreateForm
+        <div className={`relative bg-surface-container-low border rounded-xl p-4 sm:p-6 flex flex-col justify-between transition-all ${!activeVault || showCreateForm
             ? "border-primary shadow-md ring-1 ring-primary/20"
             : "border-outline-variant/30 opacity-95"
           }`}>
@@ -289,7 +289,7 @@ export default function SimpleDashboard() {
 
 
         {/* ================= STEP 2: PROOF OF LIFE (OWNER) ================= */}
-        <div className={`relative bg-surface-container-low border rounded-xl p-6 flex flex-col justify-between transition-all ${activeVault && activeVault.status === 0
+        <div className={`relative bg-surface-container-low border rounded-xl p-4 sm:p-6 flex flex-col justify-between transition-all ${activeVault && activeVault.status === 0
             ? "border-primary shadow-lg ring-1 ring-primary/30"
             : "border-outline-variant/30"
           }`}>
@@ -381,7 +381,7 @@ export default function SimpleDashboard() {
 
 
         {/* ================= STEP 3: HEIR CLAIM ================= */}
-        <div className={`relative bg-surface-container-low border rounded-xl p-6 flex flex-col justify-between transition-all ${isDeadlinePassed
+        <div className={`relative bg-surface-container-low border rounded-xl p-4 sm:p-6 flex flex-col justify-between transition-all ${isDeadlinePassed
             ? "border-danger shadow-lg ring-2 ring-danger/30 bg-danger/5"
             : isExecuted
               ? "border-success/40 bg-success/5"
