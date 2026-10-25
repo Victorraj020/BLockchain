@@ -8,9 +8,9 @@ import Header from "@/components/layout/Header";
 import NotificationBanner from "@/components/common/NotificationBanner";
 
 export const metadata: Metadata = {
-  title: "AegisVault — Digital Contingency Protocol",
+  title: "Dead-Man Switch",
   description:
-    "Institutional-grade decentralized contingency protocol and autonomous digital inheritance vault on Ethereum.",
+    "Decentralized Dead-Man Switch contingency protocol and digital inheritance vault on Ethereum.",
 };
 
 export default function RootLayout({

@@ -109,7 +109,7 @@ export default function LoginPage() {
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#14161E] border border-[#262A38] w-fit shadow-sm">
             <AegisEmblem size={22} />
             <span className="text-xs font-semibold tracking-wider uppercase text-purple-300">
-              AegisVault Protocol
+              Dead-Man Switch
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
           </div>
@@ -205,7 +205,7 @@ export default function LoginPage() {
             <AegisEmblem size={88} className="mb-4" />
 
             <h2 className="text-2xl font-black text-white tracking-tight">
-              AegisVault
+              Dead-Man Switch
             </h2>
             <p className="text-xs text-gray-400 mt-1 max-w-xs">
               {mode === "signin"
@@ -346,7 +346,7 @@ export default function LoginPage() {
                   </>
                 ) : (
                   <>
-                    <span>Create Aegis Account</span>
+                    <span>Create Account</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}

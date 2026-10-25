@@ -14,7 +14,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
         <AegisEmblem size={70} className="mb-4 animate-pulse" />
         <div className="flex items-center gap-2 font-mono text-xs text-purple-300">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-          <span>Verifying Aegis Vault Session...</span>
+          <span>Verifying Dead-Man Switch Session...</span>
         </div>
       </div>
     );

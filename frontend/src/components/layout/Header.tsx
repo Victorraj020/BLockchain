@@ -60,7 +60,7 @@ export default function Header() {
       <div className="flex items-center gap-2 pl-10 md:pl-0">
         <span className="text-xs font-mono text-outline">Workspace</span>
         <span className="text-outline text-xs">/</span>
-        <span className="text-xs font-medium text-on-surface">Digital Contingency Vault</span>
+        <span className="text-xs font-medium text-on-surface">Dead-Man Switch</span>
       </div>
 
       {/* Action Controls Right */}

@@ -95,7 +95,7 @@ export default function SimpleDashboard() {
             <span>Dead-Man Switch Protocol</span>
           </div>
           <h1 className="text-2xl md:text-3xl font-bold text-on-surface tracking-tight">
-            Digital Contingency Vault
+            Dead-Man Switch
           </h1>
           <p className="text-sm text-outline mt-1 max-w-xl">
             A simple 3-step fail-safe: lock your assets, check in to prove you're active, and if you miss your deadline, your heir claims everything automatically.
