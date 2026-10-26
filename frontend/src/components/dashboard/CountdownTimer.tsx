@@ -99,17 +99,17 @@ export default function CountdownTimer({
   };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       {/* Header telemetry info */}
-      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-3.5 gap-2">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-1.5 mb-3">
+        <div className="flex items-center gap-2 flex-wrap">
           {getStatusBadge()}
-          <span className="text-[11px] font-mono uppercase tracking-wider text-outline font-medium">
+          <span className="text-[10px] font-mono uppercase tracking-wider text-outline font-medium">
             DEADLINE COUNTDOWN
           </span>
         </div>
-        <div className="text-[11px] font-mono text-outline flex items-center gap-1.5">
-          <Clock className="w-3 h-3 text-outline" />
+        <div className="text-[10px] font-mono text-outline flex items-center gap-1 flex-wrap">
+          <Clock className="w-3 h-3 shrink-0" />
           <span>Next deadline:</span>
           <span className="text-on-surface font-medium">
             {formatTimestamp(deadline)}
@@ -117,93 +117,32 @@ export default function CountdownTimer({
         </div>
       </div>
 
-      {/* Tabular Monospace Countdown Display */}
-      <div className="grid grid-cols-4 sm:flex sm:items-center gap-1.5 sm:gap-3">
-        {/* Days */}
-        <div
-          className={`border rounded-lg px-1.5 sm:px-4 py-2 sm:py-3 text-center sm:min-w-[100px] transition-colors ${
-            timeLeft.isExpired
-              ? "bg-danger/10 border-danger/40"
-              : "bg-surface-container border-outline-variant/40"
-          }`}
-        >
-          <div
-            className={`font-mono text-lg sm:text-3xl font-semibold tabular-nums ${
-              timeLeft.isExpired ? "text-danger" : "text-on-surface"
-            }`}
-          >
-            {pad(timeLeft.days)}
-          </div>
-          <div className="font-mono text-[9px] sm:text-[10px] tracking-wider text-outline uppercase mt-0.5">
-            DAYS
-          </div>
-        </div>
-
-        <span className="hidden sm:inline text-xl text-outline-variant font-mono">:</span>
-
-        {/* Hours */}
-        <div
-          className={`border rounded-lg px-1.5 sm:px-4 py-2 sm:py-3 text-center sm:min-w-[100px] transition-colors ${
-            timeLeft.isExpired
-              ? "bg-danger/10 border-danger/40"
-              : "bg-surface-container border-outline-variant/40"
-          }`}
-        >
-          <div
-            className={`font-mono text-lg sm:text-3xl font-semibold tabular-nums ${
-              timeLeft.isExpired ? "text-danger" : "text-on-surface"
-            }`}
-          >
-            {pad(timeLeft.hours)}
-          </div>
-          <div className="font-mono text-[9px] sm:text-[10px] tracking-wider text-outline uppercase mt-0.5">
-            HOURS
-          </div>
-        </div>
-
-        <span className="hidden sm:inline text-xl text-outline-variant font-mono">:</span>
-
-        {/* Minutes */}
-        <div
-          className={`border rounded-lg px-1.5 sm:px-4 py-2 sm:py-3 text-center sm:min-w-[100px] transition-colors ${
-            timeLeft.isExpired
-              ? "bg-danger/10 border-danger/40"
-              : "bg-surface-container border-outline-variant/40"
-          }`}
-        >
-          <div
-            className={`font-mono text-lg sm:text-3xl font-semibold tabular-nums ${
-              timeLeft.isExpired ? "text-danger" : "text-on-surface"
-            }`}
-          >
-            {pad(timeLeft.minutes)}
-          </div>
-          <div className="font-mono text-[9px] sm:text-[10px] tracking-wider text-outline uppercase mt-0.5">
-            MINUTES
-          </div>
-        </div>
-
-        <span className="hidden sm:inline text-xl text-outline-variant font-mono">:</span>
-
-        {/* Seconds */}
-        <div
-          className={`border rounded-lg px-1.5 sm:px-4 py-2 sm:py-3 text-center sm:min-w-[100px] transition-colors ${
-            timeLeft.isExpired
-              ? "bg-danger/10 border-danger/40"
-              : "bg-surface-container border-outline-variant/40"
-          }`}
-        >
-          <div
-            className={`font-mono text-lg sm:text-3xl font-semibold tabular-nums ${
-              timeLeft.isExpired ? "text-danger" : "text-on-surface"
-            }`}
-          >
-            {pad(timeLeft.seconds)}
-          </div>
-          <div className="font-mono text-[10px] tracking-wider text-outline uppercase mt-0.5">
-            SECONDS
-          </div>
-        </div>
+      {/* Tabular Monospace Countdown — always 4-col, fully contained inside card */}
+      <div className="grid grid-cols-4 gap-1.5 w-full">
+        {(["DAYS", "HRS", "MIN", "SEC"] as const).map((label, i) => {
+          const vals = [timeLeft.days, timeLeft.hours, timeLeft.minutes, timeLeft.seconds];
+          return (
+            <div
+              key={label}
+              className={`border rounded-lg py-2.5 text-center transition-colors ${
+                timeLeft.isExpired
+                  ? "bg-danger/10 border-danger/40"
+                  : "bg-surface-container border-outline-variant/40"
+              }`}
+            >
+              <div
+                className={`font-mono text-xl font-semibold tabular-nums leading-none ${
+                  timeLeft.isExpired ? "text-danger" : "text-on-surface"
+                }`}
+              >
+                {pad(vals[i])}
+              </div>
+              <div className="font-mono text-[9px] tracking-wider text-outline uppercase mt-1">
+                {label}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
