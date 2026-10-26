@@ -1,1 +1,597 @@
-"[{\"type\":\"error\",\"name\":\"ReentrancyGuardReentrantCall\",\"inputs\":[]},{\"type\":\"error\",\"name\":\"SafeERC20FailedOperation\",\"inputs\":[{\"type\":\"address\",\"name\":\"token\"}]},{\"type\":\"event\",\"anonymous\":false,\"name\":\"ActionExecuted\",\"inputs\":[{\"type\":\"uint256\",\"name\":\"vaultId\",\"indexed\":true},{\"type\":\"uint8\",\"name\":\"actionType\",\"indexed\":false},{\"type\":\"address\",\"name\":\"beneficiary\",\"indexed\":true},{\"type\":\"uint256\",\"name\":\"amountTransferred\",\"indexed\":false},{\"type\":\"string\",\"name\":\"payloadHash\",\"indexed\":false}]},{\"type\":\"event\",\"anonymous\":false,\"name\":\"BeneficiaryUpdated\",\"inputs\":[{\"type\":\"uint256\",\"name\":\"vaultId\",\"indexed\":true},{\"type\":\"address\",\"name\":\"oldBeneficiary\",\"indexed\":true},{\"type\":\"address\",\"name\":\"newBeneficiary\",\"indexed\":true}]},{\"type\":\"event\",\"anonymous\":false,\"name\":\"CheckedIn\",\"inputs\":[{\"type\":\"uint256\",\"name\":\"vaultId\",\"indexed\":true},{\"type\":\"address\",\"name\":\"owner\",\"indexed\":true},{\"type\":\"uint256\",\"name\":\"timestamp\",\"indexed\":false},{\"type\":\"uint256\",\"name\":\"newDeadline\",\"indexed\":false}]},{\"type\":\"event\",\"anonymous\":false,\"name\":\"SwitchTriggered\",\"inputs\":[{\"type\":\"uint256\",\"name\":\"vaultId\",\"indexed\":true},{\"type\":\"address\",\"name\":\"caller\",\"indexed\":true},{\"type\":\"uint256\",\"name\":\"timestamp\",\"indexed\":false}]},{\"type\":\"event\",\"anonymous\":false,\"name\":\"VaultCancelled\",\"inputs\":[{\"type\":\"uint256\",\"name\":\"vaultId\",\"indexed\":true},{\"type\":\"address\",\"name\":\"owner\",\"indexed\":true},{\"type\":\"uint256\",\"name\":\"refundAmount\",\"indexed\":false}]},{\"type\":\"event\",\"anonymous\":false,\"name\":\"VaultCreated\",\"inputs\":[{\"type\":\"uint256\",\"name\":\"vaultId\",\"indexed\":true},{\"type\":\"address\",\"name\":\"owner\",\"indexed\":true},{\"type\":\"address\",\"name\":\"beneficiary\",\"indexed\":true},{\"type\":\"uint256\",\"name\":\"checkInInterval\",\"indexed\":false},{\"type\":\"uint8\",\"name\":\"actionType\",\"indexed\":false},{\"type\":\"uint256\",\"name\":\"tokenAmount\",\"indexed\":false},{\"type\":\"uint256\",\"name\":\"deadline\",\"indexed\":false}]},{\"type\":\"event\",\"anonymous\":false,\"name\":\"VaultFunded\",\"inputs\":[{\"type\":\"uint256\",\"name\":\"vaultId\",\"indexed\":true},{\"type\":\"address\",\"name\":\"funder\",\"indexed\":true},{\"type\":\"uint256\",\"name\":\"amountFunded\",\"indexed\":false},{\"type\":\"uint256\",\"name\":\"totalDeposited\",\"indexed\":false}]},{\"type\":\"function\",\"name\":\"MIN_INTERVAL\",\"constant\":true,\"stateMutability\":\"view\",\"payable\":false,\"inputs\":[],\"outputs\":[{\"type\":\"uint256\",\"name\":\"\"}]},{\"type\":\"function\",\"name\":\"cancelVault\",\"constant\":false,\"payable\":false,\"inputs\":[{\"type\":\"uint256\",\"name\":\"vaultId\"}],\"outputs\":[]},{\"type\":\"function\",\"name\":\"checkIn\",\"constant\":false,\"payable\":false,\"inputs\":[{\"type\":\"uint256\",\"name\":\"vaultId\"}],\"outputs\":[]},{\"type\":\"function\",\"name\":\"createVault\",\"constant\":false,\"payable\":false,\"inputs\":[{\"type\":\"tuple\",\"name\":\"params\",\"components\":[{\"type\":\"string\",\"name\":\"name\"},{\"type\":\"string\",\"name\":\"description\"},{\"type\":\"address\",\"name\":\"beneficiary\"},{\"type\":\"uint256\",\"name\":\"checkInInterval\"},{\"type\":\"uint8\",\"name\":\"actionType\"},{\"type\":\"address\",\"name\":\"tokenAddress\"},{\"type\":\"uint256\",\"name\":\"tokenAmount\"},{\"type\":\"string\",\"name\":\"payloadHash\"}]}],\"outputs\":[{\"type\":\"uint256\",\"name\":\"\"}]},{\"type\":\"function\",\"name\":\"depositTokens\",\"constant\":false,\"payable\":false,\"inputs\":[{\"type\":\"uint256\",\"name\":\"vaultId\"},{\"type\":\"uint256\",\"name\":\"amount\"}],\"outputs\":[]},{\"type\":\"function\",\"name\":\"getAllVaults\",\"constant\":true,\"stateMutability\":\"view\",\"payable\":false,\"inputs\":[],\"outputs\":[{\"type\":\"tuple[]\",\"name\":\"\",\"components\":[{\"type\":\"uint256\",\"name\":\"id\"},{\"type\":\"address\",\"name\":\"owner\"},{\"type\":\"address\",\"name\":\"beneficiary\"},{\"type\":\"string\",\"name\":\"name\"},{\"type\":\"string\",\"name\":\"description\"},{\"type\":\"uint256\",\"name\":\"checkInInterval\"},{\"type\":\"uint256\",\"name\":\"lastCheckIn\"},{\"type\":\"uint8\",\"name\":\"actionType\"},{\"type\":\"address\",\"name\":\"tokenAddress\"},{\"type\":\"uint256\",\"name\":\"tokenAmount\"},{\"type\":\"uint256\",\"name\":\"depositedAmount\"},{\"type\":\"string\",\"name\":\"payloadHash\"},{\"type\":\"uint8\",\"name\":\"status\"},{\"type\":\"uint256\",\"name\":\"createdAt\"},{\"type\":\"uint256\",\"name\":\"executedAt\"}]}]},{\"type\":\"function\",\"name\":\"getBeneficiaryVaults\",\"constant\":true,\"stateMutability\":\"view\",\"payable\":false,\"inputs\":[{\"type\":\"address\",\"name\":\"beneficiary\"}],\"outputs\":[{\"type\":\"uint256[]\",\"name\":\"\"}]},{\"type\":\"function\",\"name\":\"getDeadline\",\"constant\":true,\"stateMutability\":\"view\",\"payable\":false,\"inputs\":[{\"type\":\"uint256\",\"name\":\"vaultId\"}],\"outputs\":[{\"type\":\"uint256\",\"name\":\"\"}]},{\"type\":\"function\",\"name\":\"getUserVaults\",\"constant\":true,\"stateMutability\":\"view\",\"payable\":false,\"inputs\":[{\"type\":\"address\",\"name\":\"user\"}],\"outputs\":[{\"type\":\"uint256[]\",\"name\":\"\"}]},{\"type\":\"function\",\"name\":\"getVault\",\"constant\":true,\"stateMutability\":\"view\",\"payable\":false,\"inputs\":[{\"type\":\"uint256\",\"name\":\"vaultId\"}],\"outputs\":[{\"type\":\"tuple\",\"name\":\"\",\"components\":[{\"type\":\"uint256\",\"name\":\"id\"},{\"type\":\"address\",\"name\":\"owner\"},{\"type\":\"address\",\"name\":\"beneficiary\"},{\"type\":\"string\",\"name\":\"name\"},{\"type\":\"string\",\"name\":\"description\"},{\"type\":\"uint256\",\"name\":\"checkInInterval\"},{\"type\":\"uint256\",\"name\":\"lastCheckIn\"},{\"type\":\"uint8\",\"name\":\"actionType\"},{\"type\":\"address\",\"name\":\"tokenAddress\"},{\"type\":\"uint256\",\"name\":\"tokenAmount\"},{\"type\":\"uint256\",\"name\":\"depositedAmount\"},{\"type\":\"string\",\"name\":\"payloadHash\"},{\"type\":\"uint8\",\"name\":\"status\"},{\"type\":\"uint256\",\"name\":\"createdAt\"},{\"type\":\"uint256\",\"name\":\"executedAt\"}]}]},{\"type\":\"function\",\"name\":\"getVaultCount\",\"constant\":true,\"stateMutability\":\"view\",\"payable\":false,\"inputs\":[],\"outputs\":[{\"type\":\"uint256\",\"name\":\"\"}]},{\"type\":\"function\",\"name\":\"isActionEligible\",\"constant\":true,\"stateMutability\":\"view\",\"payable\":false,\"inputs\":[{\"type\":\"uint256\",\"name\":\"vaultId\"}],\"outputs\":[{\"type\":\"bool\",\"name\":\"\"}]},{\"type\":\"function\",\"name\":\"triggerSwitch\",\"constant\":false,\"payable\":false,\"inputs\":[{\"type\":\"uint256\",\"name\":\"vaultId\"}],\"outputs\":[]},{\"type\":\"function\",\"name\":\"updateBeneficiary\",\"constant\":false,\"payable\":false,\"inputs\":[{\"type\":\"uint256\",\"name\":\"vaultId\"},{\"type\":\"address\",\"name\":\"newBeneficiary\"}],\"outputs\":[]}]"
+[
+  {
+    "type": "error",
+    "name": "ReentrancyGuardReentrantCall",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "SafeERC20FailedOperation",
+    "inputs": [
+      {
+        "type": "address",
+        "name": "token"
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "ActionExecuted",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "vaultId",
+        "indexed": true
+      },
+      {
+        "type": "uint8",
+        "name": "actionType",
+        "indexed": false
+      },
+      {
+        "type": "address",
+        "name": "beneficiary",
+        "indexed": true
+      },
+      {
+        "type": "uint256",
+        "name": "amountTransferred",
+        "indexed": false
+      },
+      {
+        "type": "string",
+        "name": "payloadHash",
+        "indexed": false
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "BeneficiaryUpdated",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "vaultId",
+        "indexed": true
+      },
+      {
+        "type": "address",
+        "name": "oldBeneficiary",
+        "indexed": true
+      },
+      {
+        "type": "address",
+        "name": "newBeneficiary",
+        "indexed": true
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "CheckedIn",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "vaultId",
+        "indexed": true
+      },
+      {
+        "type": "address",
+        "name": "owner",
+        "indexed": true
+      },
+      {
+        "type": "uint256",
+        "name": "timestamp",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "newDeadline",
+        "indexed": false
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "SwitchTriggered",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "vaultId",
+        "indexed": true
+      },
+      {
+        "type": "address",
+        "name": "caller",
+        "indexed": true
+      },
+      {
+        "type": "uint256",
+        "name": "timestamp",
+        "indexed": false
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "VaultCancelled",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "vaultId",
+        "indexed": true
+      },
+      {
+        "type": "address",
+        "name": "owner",
+        "indexed": true
+      },
+      {
+        "type": "uint256",
+        "name": "refundAmount",
+        "indexed": false
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "VaultCreated",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "vaultId",
+        "indexed": true
+      },
+      {
+        "type": "address",
+        "name": "owner",
+        "indexed": true
+      },
+      {
+        "type": "address",
+        "name": "beneficiary",
+        "indexed": true
+      },
+      {
+        "type": "uint256",
+        "name": "checkInInterval",
+        "indexed": false
+      },
+      {
+        "type": "uint8",
+        "name": "actionType",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "tokenAmount",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "deadline",
+        "indexed": false
+      }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "VaultFunded",
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "vaultId",
+        "indexed": true
+      },
+      {
+        "type": "address",
+        "name": "funder",
+        "indexed": true
+      },
+      {
+        "type": "uint256",
+        "name": "amountFunded",
+        "indexed": false
+      },
+      {
+        "type": "uint256",
+        "name": "totalDeposited",
+        "indexed": false
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "MIN_INTERVAL",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "cancelVault",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "vaultId"
+      }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "checkIn",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "vaultId"
+      }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "createVault",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "tuple",
+        "name": "params",
+        "components": [
+          {
+            "type": "string",
+            "name": "name"
+          },
+          {
+            "type": "string",
+            "name": "description"
+          },
+          {
+            "type": "address",
+            "name": "beneficiary"
+          },
+          {
+            "type": "uint256",
+            "name": "checkInInterval"
+          },
+          {
+            "type": "uint8",
+            "name": "actionType"
+          },
+          {
+            "type": "address",
+            "name": "tokenAddress"
+          },
+          {
+            "type": "uint256",
+            "name": "tokenAmount"
+          },
+          {
+            "type": "string",
+            "name": "payloadHash"
+          }
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "depositTokens",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "vaultId"
+      },
+      {
+        "type": "uint256",
+        "name": "amount"
+      }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "getAllVaults",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "tuple[]",
+        "name": "",
+        "components": [
+          {
+            "type": "uint256",
+            "name": "id"
+          },
+          {
+            "type": "address",
+            "name": "owner"
+          },
+          {
+            "type": "address",
+            "name": "beneficiary"
+          },
+          {
+            "type": "string",
+            "name": "name"
+          },
+          {
+            "type": "string",
+            "name": "description"
+          },
+          {
+            "type": "uint256",
+            "name": "checkInInterval"
+          },
+          {
+            "type": "uint256",
+            "name": "lastCheckIn"
+          },
+          {
+            "type": "uint8",
+            "name": "actionType"
+          },
+          {
+            "type": "address",
+            "name": "tokenAddress"
+          },
+          {
+            "type": "uint256",
+            "name": "tokenAmount"
+          },
+          {
+            "type": "uint256",
+            "name": "depositedAmount"
+          },
+          {
+            "type": "string",
+            "name": "payloadHash"
+          },
+          {
+            "type": "uint8",
+            "name": "status"
+          },
+          {
+            "type": "uint256",
+            "name": "createdAt"
+          },
+          {
+            "type": "uint256",
+            "name": "executedAt"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getBeneficiaryVaults",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "beneficiary"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "uint256[]",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getDeadline",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "vaultId"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getUserVaults",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "address",
+        "name": "user"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "uint256[]",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getVault",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "vaultId"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "tuple",
+        "name": "",
+        "components": [
+          {
+            "type": "uint256",
+            "name": "id"
+          },
+          {
+            "type": "address",
+            "name": "owner"
+          },
+          {
+            "type": "address",
+            "name": "beneficiary"
+          },
+          {
+            "type": "string",
+            "name": "name"
+          },
+          {
+            "type": "string",
+            "name": "description"
+          },
+          {
+            "type": "uint256",
+            "name": "checkInInterval"
+          },
+          {
+            "type": "uint256",
+            "name": "lastCheckIn"
+          },
+          {
+            "type": "uint8",
+            "name": "actionType"
+          },
+          {
+            "type": "address",
+            "name": "tokenAddress"
+          },
+          {
+            "type": "uint256",
+            "name": "tokenAmount"
+          },
+          {
+            "type": "uint256",
+            "name": "depositedAmount"
+          },
+          {
+            "type": "string",
+            "name": "payloadHash"
+          },
+          {
+            "type": "uint8",
+            "name": "status"
+          },
+          {
+            "type": "uint256",
+            "name": "createdAt"
+          },
+          {
+            "type": "uint256",
+            "name": "executedAt"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getVaultCount",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      {
+        "type": "uint256",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "isActionEligible",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "vaultId"
+      }
+    ],
+    "outputs": [
+      {
+        "type": "bool",
+        "name": ""
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "triggerSwitch",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "vaultId"
+      }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "updateBeneficiary",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      {
+        "type": "uint256",
+        "name": "vaultId"
+      },
+      {
+        "type": "address",
+        "name": "newBeneficiary"
+      }
+    ],
+    "outputs": []
+  }
+]
