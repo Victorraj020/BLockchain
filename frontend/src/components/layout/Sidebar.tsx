@@ -5,11 +5,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutGrid,
-  Shield,
   UserCheck,
   History,
   Sliders,
-  PlusCircle,
   Copy,
   Check,
   Wallet,
@@ -28,8 +26,6 @@ export default function Sidebar() {
 
   const navItems = [
     { name: "Dashboard", href: "/", icon: LayoutGrid },
-    { name: "My Vault", href: "/my-vault", icon: Shield },
-    { name: "Create Vault", href: "/create-vault", icon: PlusCircle },
     { name: "Beneficiary", href: "/beneficiary", icon: UserCheck },
     { name: "Activity Log", href: "/activity-log", icon: History },
     { name: "Settings", href: "/settings", icon: Sliders },

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useWeb3 } from "@/context/Web3Context";
 import CountdownTimer from "@/components/dashboard/CountdownTimer";
+import TokenFlowVisualizer from "@/components/dashboard/TokenFlowVisualizer";
 import { shortenAddress, formatInterval, formatTimestamp } from "@/lib/constants";
 import {
   ShieldCheck,
@@ -465,6 +466,18 @@ export default function SimpleDashboard() {
         </div>
 
       </div>
+
+      {/* ===== LIVE TOKEN FLOW VISUALIZER ===== */}
+      {activeVault && (
+        <TokenFlowVisualizer
+          ownerAddress={activeVault.owner}
+          beneficiaryAddress={activeVault.beneficiary}
+          tokenAmount={activeVault.depositedAmount}
+          isExecuted={!!isExecuted}
+          isDeadlinePassed={!!isDeadlinePassed}
+          status={activeVault.status}
+        />
+      )}
 
       {/* Simple Instruction Card at the bottom */}
       <div className="bg-surface-container-low border border-outline-variant/20 rounded-xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs">
