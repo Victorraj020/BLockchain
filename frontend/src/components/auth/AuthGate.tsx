@@ -10,17 +10,17 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen w-full bg-[#090A0E] flex flex-col items-center justify-center text-white">
-        <AegisEmblem size={70} className="mb-4 animate-pulse" />
-        <div className="flex items-center gap-2 font-mono text-xs text-purple-300">
+      <div className="min-h-screen w-full bg-[#08090C] flex flex-col items-center justify-center text-zinc-100">
+        <AegisEmblem size={52} className="mb-4 animate-pulse" />
+        <div className="flex items-center gap-2 font-mono text-xs text-zinc-400">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-          <span>Verifying Dead-Man Switch Session...</span>
+          <span>Verifying Vault Security Session...</span>
         </div>
       </div>
     );
   }
 
-  // If not authenticated, lock down the entire application and show full LoginPage
+  // If not authenticated, lock down the application and show full precision LoginPage
   if (!user) {
     return <LoginPage />;
   }
