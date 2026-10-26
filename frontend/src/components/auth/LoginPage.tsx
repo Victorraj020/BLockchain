@@ -100,18 +100,6 @@ export default function LoginPage() {
       <div className="relative z-10 w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
         {/* Left Column: Interactive 3D Mechanical Vault Showcase */}
         <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
-          {/* Status Header Badge */}
-          <div className="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-[#111319] border border-[#222735] text-xs font-mono shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-zinc-400 uppercase tracking-wider text-[11px]">
-              Protocol: Dead-Man Switch
-            </span>
-            <span className="text-zinc-600">|</span>
-            <span className="text-emerald-400 text-[11px] font-semibold">
-              EVM Node Active
-            </span>
-          </div>
-
           {/* Heading */}
           <div className="space-y-2">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-[1.12]">
